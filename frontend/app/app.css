@@ -2,11 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --beige: #FFF7ED;
+  --bordeaux: #852525;
+}
+
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  background-color: var(--beige);
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  font-family: "Belleza", serif;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--bordeaux);
 }
