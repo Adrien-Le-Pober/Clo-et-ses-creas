@@ -10,7 +10,8 @@ import {
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 
-import { Navbar } from "./layouts/navbar";
+import Navbar from "./layouts/navbar";
+import Footer from "./layouts/footer";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Navbar/>
         {children}
+        <Footer/>
         <ScrollRestoration />
         <Scripts />
       </body>

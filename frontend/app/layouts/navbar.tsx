@@ -5,7 +5,7 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export function Navbar() {
+export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
