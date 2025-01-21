@@ -5,7 +5,7 @@ import instagram from '../../assets/images/instagram.png';
 
 export default function footer() {
     return (
-        <footer className="fixed bottom-0 left-0 bg-primary text-secondary w-full p-12">
+        <footer className="bottom-0 left-0 bg-primary text-secondary w-full p-12">
             <section className="flex flex-col xl:flex-row">
                 <div className="xl:w-1/3">
                     <h3 className="text-4xl">Clo et ses Créas</h3>

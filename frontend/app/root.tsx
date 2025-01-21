@@ -13,6 +13,9 @@ import stylesheet from "./app.css?url";
 import Navbar from "./layouts/navbar";
 import Footer from "./layouts/footer";
 
+import error_404 from "./../assets/images/error_404.png";
+import error_404_mobile from "./../assets/images/error_404_mobile.png";
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -55,13 +58,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
+  let is404 = false;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+    is404 = error.status === 404;
+    message = is404 ? "404" : error.status.toString();
+    details = is404 ? "" : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -69,7 +71,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
+      {is404 ? (
+        <picture>
+          <source srcSet={error_404} media="(min-width: 768px)" />
+          <img src={error_404_mobile} alt="404 error" />
+        </picture>
+      ) : (
+        <h1>{message}</h1>
+      )}
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
