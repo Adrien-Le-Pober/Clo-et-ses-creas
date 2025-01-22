@@ -40,9 +40,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Navbar/>
-        {children}
+        
+        <header>
+          <Navbar/>
+        </header>
+
+        <main className="container mx-auto">
+          {children}
+        </main>
+        
         <Footer/>
+
         <ScrollRestoration />
         <Scripts />
       </body>
