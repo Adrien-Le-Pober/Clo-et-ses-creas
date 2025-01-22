@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TaxonomyItem from "./taxonomyItem";
 import axios from 'axios';
+import Loader from "~/components/loader";
 
 interface Taxonomy {
     id: string;
@@ -44,13 +45,7 @@ export default function taxonomyList() {
         fetchTaxonomies();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-16">
-                <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
-            </div>
-        );
-    };
+    if (loading) return <Loader/>;
     if (error) return <p>Erreur: {error}</p>;
 
     return (
