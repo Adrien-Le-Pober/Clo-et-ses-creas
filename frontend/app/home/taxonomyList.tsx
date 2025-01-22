@@ -29,7 +29,7 @@ export default function taxonomyList() {
                     code: taxon.code,
                     name: taxon.name,
                     slug: taxon.slug,
-                    images: taxon.images || [],
+                    images: taxon.images?.map((img: any) => img.path) || [],
                 }));
 
                 setTaxonomyList(taxonomies);
@@ -44,7 +44,13 @@ export default function taxonomyList() {
         fetchTaxonomies();
     }, []);
 
-    if (loading) return <p>Chargement...</p>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-16">
+                <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+            </div>
+        );
+    };
     if (error) return <p>Erreur: {error}</p>;
 
     return (
