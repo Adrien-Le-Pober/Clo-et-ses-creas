@@ -1,7 +1,9 @@
+import loader from './../../assets/images/loader.mp4';
+
 export default function Loader() {
     return (
         <div className="flex justify-center items-center h-16">
-            <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin"></div>
+            <video src={loader} loop autoPlay muted className="w-52"></video>
         </div>
     );
 }
