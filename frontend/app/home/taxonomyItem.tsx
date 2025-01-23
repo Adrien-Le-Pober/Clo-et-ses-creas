@@ -1,11 +1,14 @@
+import { Link } from "react-router";
+
 interface TaxonomyItemProps {
     name: string;
     images: string[];
+    slug: string;
 }
 
-export default function taxonomyItem({ name, images }: TaxonomyItemProps) {
+export default function taxonomyItem({ name, images, slug }: TaxonomyItemProps) {
     return (
-        <div className="flex flex-col">
+        <Link to={`/categories/${slug}`} className="flex flex-col hover:opacity-80">
             <span className="text-center text-xl uppercase">{name}</span>
             {images.length > 0 ? (
                 <img src={images[0]} alt={name} className="w-full aspect-video object-cover shadow" />
@@ -14,6 +17,6 @@ export default function taxonomyItem({ name, images }: TaxonomyItemProps) {
                     <span>No Image</span>
                 </div>
             )}
-        </div>
+        </Link>
     )
 }

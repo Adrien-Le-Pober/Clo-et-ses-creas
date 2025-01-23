@@ -22,8 +22,6 @@ export default function taxonomyList() {
                 const response = await axios.get(`${import.meta.env.VITE_API_URI}shop/taxons`);
                 const data = response.data;
 
-                console.log(data);
-
                 // Transformation des données pour correspondre au type Taxonomy
                 const taxonomies: Taxonomy[] = data["hydra:member"].map((taxon: any) => ({
                     id: taxon.id,
