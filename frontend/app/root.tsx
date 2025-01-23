@@ -45,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Navbar/>
         </header>
 
-        <main className="container mx-auto">
+        <main className="container mx-auto min-h-56">
           {children}
         </main>
         
