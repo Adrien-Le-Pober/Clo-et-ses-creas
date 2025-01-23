@@ -1,0 +1,14 @@
+sylius_fixtures:
+    suites:
+        custom_admin_user:
+            fixtures:
+                custom_admin_user:
+                    options:
+                        email: "admin@example.com"
+                        username: "admin"
+                        password: "admin"
+                        roles:
+                            - "ROLE_ADMIN"
+                            - "ROLE_SUPER_ADMIN"
+                        locale_code: "fr_FR"
+                        enabled: true
