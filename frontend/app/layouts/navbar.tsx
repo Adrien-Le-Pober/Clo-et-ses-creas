@@ -4,6 +4,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from "react-router";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +35,9 @@ export default function Navbar() {
                         <a href="#contact" className="font-medium hover:underline">
                             Contact
                         </a>
-                        <a href="#mon-histoire" className="font-medium hover:underline">
+                        <Link to="mon-histoire" className="font-medium hover:underline">
                             Mon histoire
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Icons */}
