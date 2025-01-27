@@ -4,6 +4,7 @@ export default [
     index("routes/home.tsx"),
     route("mon-histoire", "routes/myStory.tsx"),
     route("inscription", "routes/signIn.tsx"),
+    route("connexion", "routes/login.tsx"),
 
     ...prefix("categories", [
         route("/categorie/:category", "routes/categories/category.tsx"),

@@ -8,7 +8,7 @@ interface Input {
 export default function Input({
     label,
     name,
-    width = "max-w-80",
+    width = "w-full",
     errorMsg = "Une erreur est survenue",
 }: Input) {
     const inputClass=`border rounded-lg px-2 ${width}`
