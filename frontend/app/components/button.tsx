@@ -8,7 +8,7 @@ interface Button {
 
 export default function Button({ 
     text,
-    width = 'w-82',
+    width = 'max-w-80',
     height = 'h-12',
     fontSize = 'text-xl',
     outlined = false
