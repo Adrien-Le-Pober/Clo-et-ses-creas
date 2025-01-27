@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import logo from '../../assets/images/logo.jpg';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -8,6 +8,28 @@ import { Link } from "react-router";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+    const profileRef = useRef<HTMLDivElement | null>(null);
+    const iconRef = useRef<SVGSVGElement | null>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                profileRef.current &&
+                !profileRef.current.contains(event.target as Node) &&
+                iconRef.current &&
+                !iconRef.current.contains(event.target as Node)
+            ) {
+                setIsProfileOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     return (
         <nav className="bg-primary text-secondary">
@@ -49,16 +71,33 @@ export default function Navbar() {
                             <ShoppingBagOutlinedIcon className="lg:w-9 lg:h-9"/>
                         </a>
                         <a href="#profile">
-                            <PersonIcon className="lg:w-9 lg:h-9" />
+                            <PersonIcon
+                                className="lg:w-9 lg:h-9"
+                                onClick={() => setIsProfileOpen(prev => !prev)}
+                                ref={iconRef}
+                            />
                         </a>
                     </div>
+
+                    {/* Profile menu */}
+                    {isProfileOpen && (
+                            <div 
+                                ref={profileRef}
+                                className="absolute right-0 top-16 lg:top-32 mt-2 w-56 origin-top-right rounded-md bg-secondary text-primary shadow-lg"
+                            >
+                                <div className="py-1">
+                                    <a href="/connexion" className="block px-4 py-2">Connexion</a>
+                                    <a href="/inscription" className="block px-4 py-2">Inscription</a>
+                                </div>
+                            </div>
+                    )}
                 </div>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center justify-center">
                 <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    onClick={() => setIsMenuOpen(prev => !prev)}
                     className="text-secondary focus:outline-none"
                 >
                     <MenuIcon />
