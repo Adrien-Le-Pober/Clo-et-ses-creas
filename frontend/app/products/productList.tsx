@@ -39,7 +39,7 @@ export default function ProductList({endpoint}: ProductListProps) {
                 const mergedData: Product[] = variants.map((variant: any) => {
                     const product = products.find((prod: any) => prod['@id'] === variant.product);
                     return {
-                        id: product?.id,
+                        id: variant?.id,
                         name: product?.name || "",
                         description: product?.description || "",
                         images: product?.images?.map((img: any) => img.path) || [],
@@ -64,8 +64,8 @@ export default function ProductList({endpoint}: ProductListProps) {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-8">
-            {productList.map((product) => (
-                <ProductItem key={product.id} {...product} />
+            {productList.map((product, index) => (
+                <ProductItem key={product.id || index} {...product} />
             ))}
         </div>
     );
