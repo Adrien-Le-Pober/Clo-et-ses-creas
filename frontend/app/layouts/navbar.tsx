@@ -54,7 +54,7 @@ export default function Navbar() {
                         <a href="#cadeaux" className="font-medium hover:underline">
                             Cadeaux
                         </a>
-                        <a href="#contact" className="font-medium hover:underline">
+                        <a href="contact" className="font-medium hover:underline">
                             Contact
                         </a>
                         <Link to="mon-histoire" className="font-medium hover:underline">
