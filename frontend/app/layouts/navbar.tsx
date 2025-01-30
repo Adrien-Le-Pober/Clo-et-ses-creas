@@ -48,16 +48,16 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-8 text-lg lg:text-2xl xl:text-4xl">
-                        <a href="#creations" className="font-medium hover:underline">
+                        <a href="/creations" className="font-medium hover:underline">
                             Créations
                         </a>
                         <a href="#cadeaux" className="font-medium hover:underline">
                             Cadeaux
                         </a>
-                        <a href="contact" className="font-medium hover:underline">
+                        <a href="/contact" className="font-medium hover:underline">
                             Contact
                         </a>
-                        <Link to="mon-histoire" className="font-medium hover:underline">
+                        <Link to="/mon-histoire" className="font-medium hover:underline">
                             Mon histoire
                         </Link>
                     </div>
