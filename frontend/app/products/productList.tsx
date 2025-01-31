@@ -67,14 +67,16 @@ export default function ProductList({
 
                 const variants = await fetchAllVariants();
 
-                const mergedData: Product[] = variants.map((variant: any) => {
-                    const product = products.find((prod: any) => prod['@id'] === variant.product);
+                const mergedData: Product[] = products.map((product: any) => {
+                    const productVariants = variants.filter(
+                        (variant: any) => variant.product === product["@id"]
+                    );
                     return {
-                        id: variant?.id,
+                        id: product?.id,
                         name: product?.name || "",
                         description: product?.description || "",
                         images: product?.images?.map((img: any) => img.path) || [],
-                        price: variant.price / 100,
+                        price: productVariants[0].price / 100,
                         taxon: product?.mainTaxon,
                     };
                 });
