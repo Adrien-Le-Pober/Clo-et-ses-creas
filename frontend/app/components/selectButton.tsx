@@ -3,6 +3,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 interface SelectButtonProps {
     label: string;
     options: { value: string; label: string }[];
+    value?: string;
     width?: string; 
     height?: string; 
     fontSize?: string;
@@ -39,7 +40,10 @@ export default function SelectButton({
             {/* Sélecteur caché qui gère la valeur */}
             <select
                 className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                onChange={(e) => onChange?.(e.target.value)}
+                onChange={(e) => {
+                    onChange?.(e.target.value);
+                    e.target.value = "";
+                }}
             >
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
