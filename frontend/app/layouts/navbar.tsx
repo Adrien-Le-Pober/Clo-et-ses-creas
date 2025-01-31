@@ -108,7 +108,7 @@ export default function Navbar() {
             {isMenuOpen && (
                 <div className="md:hidden bg-primary text-secondary">
                     <a
-                        href="#creations"
+                        href="/creations"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Créations
@@ -120,13 +120,13 @@ export default function Navbar() {
                         Cadeaux
                     </a>
                     <a
-                        href="#contact"
+                        href="/contact"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Contact
                     </a>
                     <a
-                        href="#mon-histoire"
+                        href="/mon-histoire"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Mon histoire
