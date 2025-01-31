@@ -18,7 +18,7 @@ interface ProductListProps {
     searchTerm?: string;
     sortOrder?: string;
     sortPrice?: string;
-    selectedTaxon?: string[];
+    selectedTaxons?: string[];
 }
 
 export default function ProductList({
@@ -26,7 +26,7 @@ export default function ProductList({
     searchTerm,
     sortOrder,
     sortPrice,
-    selectedTaxon
+    selectedTaxons
 }: ProductListProps) {
     const apiURI = `${import.meta.env.VITE_API_URI}`;
 
@@ -106,16 +106,16 @@ export default function ProductList({
     }
 
     // 📌 Filtrage par taxon sélectionné
-    if (selectedTaxon && selectedTaxon.length > 0) {
+    if (selectedTaxons && selectedTaxons.length > 0) {
         filteredProductList = filteredProductList.filter((product) =>
-            selectedTaxon.includes(product.taxon)
+            selectedTaxons.includes(product.taxon)
         );
     }
 
     // 🔄 Appliquer le tri par prix
-    if (sortPrice === "croissant") {
+    if (sortPrice === "prix_croissant") {
         filteredProductList.sort((a, b) => a.price - b.price);
-    } else if (sortPrice === "decroissant") {
+    } else if (sortPrice === "prix_decroissant") {
         filteredProductList.sort((a, b) => b.price - a.price);
     }
 
