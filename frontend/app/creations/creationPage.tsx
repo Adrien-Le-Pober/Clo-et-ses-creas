@@ -8,7 +8,6 @@ import FilterChips from '~/components/filterChips';
 export default function creationPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortOrder, setSortOrder] = useState<string>("");
     const [sortPrice, setSortPrice] = useState<string>("");
     const [taxonList, setTaxonList] = useState<{children: any; value: string; label: string}[]>([]);
     const [selectedCategory, setSelectedCategory] = useState(""); // l'option en cours de sélection
@@ -43,13 +42,10 @@ export default function creationPage() {
         }
     };
 
-    const handleAddFilter = (type: "sort" | "price" | "taxon", value: string, label: string) => {
+    const handleAddFilter = (type: "price" | "taxon", value: string, label: string) => {
         let updatedFilters = activeFilters.filter((filter) => filter.value !== value);
 
-        if (type === "sort") {
-            updatedFilters = updatedFilters.filter((filter) => !["croissant", "decroissant"].includes(filter.value));
-            setSortOrder(value);
-        } else if (type === "price") {
+        if (type === "price") {
             updatedFilters = updatedFilters.filter((filter) => !["prix_croissant", "prix_decroissant"].includes(filter.value));
             setSortPrice(value);
         } else if (type === "taxon") {
@@ -67,9 +63,7 @@ export default function creationPage() {
     const handleRemoveFilter = (value: string) => {
         let updatedFilters = activeFilters.filter((filter) => filter.value !== value);
 
-        if (value === sortOrder) {
-            setSortOrder("");
-        } else if (value === sortPrice) {
+        if (value === sortPrice) {
             setSortPrice("");
         } else {
             setSelectedTaxon(prev => {
@@ -114,16 +108,6 @@ export default function creationPage() {
                 {isFilterOpen && (
                     <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full place-items-center mb-12">
                         <SelectButton 
-                            label="Ordre alphabétique"
-                            width="w-full max-w-[304px]"
-                            outlined={true}
-                            options={[
-                                {value:"croissant", "label": "Ordre croissant"},
-                                {value:"decroissant", "label": "Ordre décroissant"}
-                            ]}
-                            onChange={(value) => handleAddFilter("sort", value, value === "croissant" ? "Ordre croissant" : "Ordre décroissant")}
-                        />
-                        <SelectButton 
                             label="Prix"
                             width="w-full max-w-[304px]"
                             outlined={true}
@@ -160,7 +144,6 @@ export default function creationPage() {
                     <ProductList 
                         endpoint={`${import.meta.env.VITE_API_URI}shop/products`}
                         searchTerm={searchTerm}
-                        sortOrder={sortOrder}
                         sortPrice={sortPrice}
                         selectedTaxons={selectedTaxons}
                     />

@@ -16,7 +16,6 @@ interface Product {
 interface ProductListProps {
     endpoint: string,
     searchTerm?: string;
-    sortOrder?: string;
     sortPrice?: string;
     selectedTaxons?: string[];
 }
@@ -24,7 +23,6 @@ interface ProductListProps {
 export default function ProductList({
     endpoint,
     searchTerm,
-    sortOrder,
     sortPrice,
     selectedTaxons
 }: ProductListProps) {
@@ -117,13 +115,6 @@ export default function ProductList({
         filteredProductList.sort((a, b) => a.price - b.price);
     } else if (sortPrice === "prix_decroissant") {
         filteredProductList.sort((a, b) => b.price - a.price);
-    }
-
-    // 🔄 Appliquer le tri alphabétique
-    if (sortOrder && sortOrder === "croissant") {
-        filteredProductList.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortOrder && sortOrder === "decroissant") {
-        filteredProductList.sort((a, b) => b.name.localeCompare(a.name));
     }
 
     return (
