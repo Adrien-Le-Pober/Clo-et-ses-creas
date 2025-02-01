@@ -1,16 +1,23 @@
-interface Input {
+import type { UseFormRegisterReturn } from "react-hook-form";
+import ErrorMessage from "./errorMessage";
+
+interface InputProps {
     label: string;
     name: string;
+    type?: string;
     width?: string;
     errorMsg?: string;
+    register?: UseFormRegisterReturn;
 }
 
 export default function Input({
     label,
     name,
+    type = 'text',
     width = "w-full",
-    errorMsg = "Une erreur est survenue",
-}: Input) {
+    errorMsg,
+    register,
+}: InputProps) {
     const inputClass=`border rounded-lg px-2 ${width}`
 
     return (
@@ -18,11 +25,15 @@ export default function Input({
             <div className="flex flex-col pb-7">
                 <label htmlFor={name} className="pb-3 md:pb-5">{label}</label>
                 <input
-                    type="text"
+                    type={type}
                     name={name}
                     className={inputClass}
+                    {...register}
                 />
-                <span className="pt-2.5">{errorMsg}</span>
+
+                {errorMsg && (
+                    <ErrorMessage message={errorMsg}/>
+                )}
             </div>
         </>
     );

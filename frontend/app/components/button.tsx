@@ -1,5 +1,6 @@
 interface Button {
     text: string;
+    disabled?: boolean;
     width?: string;
     height?: string;
     margin?: string;
@@ -10,6 +11,7 @@ interface Button {
 
 export default function Button({ 
     text,
+    disabled = false,
     width = 'max-w-80',
     height = 'h-12',
     margin = "p-0",
@@ -25,7 +27,7 @@ export default function Button({
         }`;
 
     return (
-        <button className={buttonClass} onClick={onClick}>
+        <button className={buttonClass} disabled={disabled} onClick={onClick}>
             {text}
         </button>
     );
