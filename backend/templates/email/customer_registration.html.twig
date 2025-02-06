@@ -1,0 +1,33 @@
+{% block subject %}
+    🎉 Bienvenue sur Clo et ses Créas, {{ customer.firstName }} !
+{% endblock %}
+
+{% block body %}
+    <table role="presentation" cellspacing="0" cellpadding="0" width="100%" style="background-color: #852525; color: #FFF7ED;">
+        <tr>
+            <td align="center" style="padding: 0 20px;">
+                <!-- Logo -->
+                <table role="presentation" cellspacing="0" cellpadding="0" width="100%" style="max-width: 600px;">
+                    <tr>
+                        <td align="left" style="padding: 0 10px;">
+                            <a href="/" style="display: block; text-align: center; text-decoration: none;">
+                                <img src="https://localhost:8000/media/image/logo.jpg" alt="Logo" style="height: 56px; width: auto;" />
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <section style="background-color: #FFF7ED; color: #852525; padding: 50px;">
+        <p>Bonjour,</p>
+        <br>
+        <p>Je vous remercie pour votre inscription,</p>
+        <br>
+        <p>votre compte a été créé avec succès!</p>
+        <br>
+        <p>Si vous avez des questions, n'hésitez pas à me contacter : clotildedaumy@gmail.com</p>
+        <br>
+        <p>À bientôt !</p>
+    </section>
+{% endblock %}

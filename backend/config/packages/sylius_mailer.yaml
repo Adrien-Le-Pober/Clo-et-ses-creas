@@ -1,0 +1,15 @@
+sylius_mailer:
+    sender:
+        name: "%env(MAILER_SENDER_NAME)%"
+        address: "%env(MAILER_SENDER_ADDRESS)%"
+    emails:
+        customer_registration:
+            subject: "Bienvenue sur notre boutique, {{ customer.firstName }} !"
+            template: "email/customer_registration.html.twig"
+            enabled: true
+        user_registration:
+            enabled: false
+        account_verification_token:
+            enabled: false
+        account_verification:
+            enabled: false

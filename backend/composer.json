@@ -26,6 +26,7 @@
     "require": {
         "php": "^8.2",
         "nelmio/cors-bundle": "^2.5",
+        "sylius/mailer-bundle": "*",
         "sylius/sylius": "~2.0.0",
         "symfony/dotenv": "^6.4 || ^7.1",
         "symfony/flex": "^2.4",
