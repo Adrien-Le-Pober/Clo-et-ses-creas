@@ -5,13 +5,18 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router";
+import { useAuth } from "~/auth/authContext";
 
 export default function Navbar() {
+    const { isAuthenticated, logout } = useAuth();
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const profileRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<SVGSVGElement | null>(null);
+
+    console.log(isAuthenticated);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -86,8 +91,18 @@ export default function Navbar() {
                                 className="absolute right-0 top-16 lg:top-32 mt-2 w-56 origin-top-right rounded-md bg-secondary text-primary shadow-lg"
                             >
                                 <div className="py-1">
-                                    <a href="/connexion" className="block px-4 py-2">Connexion</a>
-                                    <a href="/inscription" className="block px-4 py-2">Inscription</a>
+                                    {isAuthenticated ? (
+                                        <>
+                                            <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">
+                                                Déconnexion
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link to="/connexion" className="block px-4 py-2">Connexion</Link>
+                                            <Link to="/inscription" className="block px-4 py-2">Inscription</Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                     )}

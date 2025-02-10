@@ -119,7 +119,6 @@ export default function SignInPage() {
                         <Button text={loading ? "Chargement..." : "Valider"} disabled={loading} />
                     </div>
                 </form>
-
             </section>
         </>
     )

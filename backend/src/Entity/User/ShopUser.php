@@ -11,4 +11,9 @@ use Sylius\Component\Core\Model\ShopUser as BaseShopUser;
 #[ORM\Table(name: 'sylius_shop_user')]
 class ShopUser extends BaseShopUser
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setEnabled(true);
+    }
 }

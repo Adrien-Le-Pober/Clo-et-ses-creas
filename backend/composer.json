@@ -25,6 +25,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.5",
         "sylius/mailer-bundle": "*",
         "sylius/sylius": "~2.0.0",
