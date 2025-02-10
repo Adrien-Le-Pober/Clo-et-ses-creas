@@ -16,8 +16,6 @@ export default function Navbar() {
     const profileRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<SVGSVGElement | null>(null);
 
-    console.log(isAuthenticated);
-
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (

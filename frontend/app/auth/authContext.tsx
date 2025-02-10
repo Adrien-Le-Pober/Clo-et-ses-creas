@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
@@ -13,6 +13,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                await axios.get(`${import.meta.env.VITE_API_URI}shop/orders`, { withCredentials: true });
+                setIsAuthenticated(true);
+            } catch {
+                setIsAuthenticated(false);
+            }
+        };
+    
+        const intervalId = setInterval(() => {
+            checkAuth();
+        }, 5 * 60 * 1000);
+    
+        checkAuth();
+    
+        return () => clearInterval(intervalId);
+    }, []);
 
     const login = async () => {
         try {
