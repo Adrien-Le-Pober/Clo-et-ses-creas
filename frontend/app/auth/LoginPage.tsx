@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useAuth } from "~/auth/authContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import Button from "~/components/button";
 import Input from "~/components/input";
@@ -84,7 +84,7 @@ export default function LoginPage() {
                     register={register("password")} 
                 />
 
-                <a href="" className="underline pb-7">J'ai oublié mon mot de passe</a>
+                <Link to="mot-de-passe-oublie" className="underline pb-7">J'ai oublié mon mot de passe</Link>
 
                 {error && <ErrorMessage message={error} />}
 

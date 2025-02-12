@@ -6,7 +6,12 @@ export default [
     route("contact", "routes/contact.tsx"),
     route("mon-histoire", "routes/myStory.tsx"),
     route("inscription", "routes/signIn.tsx"),
-    route("connexion", "routes/login.tsx"),
+
+    ...prefix("connexion", [
+        route("/", "routes/connexion/login.tsx"),
+        route("mot-de-passe-oublie", "routes/connexion/forgotPassword.tsx"),
+        route("nouveau-mot-de-passe", "routes/connexion/resetPassword.tsx"),
+    ]),
 
     ...prefix("categories", [
         route("/categorie/:category", "routes/categories/category.tsx"),

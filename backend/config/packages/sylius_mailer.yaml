@@ -7,9 +7,15 @@ sylius_mailer:
             subject: "Bienvenue sur notre boutique, {{ customer.firstName }} !"
             template: "email/customer_registration.html.twig"
             enabled: true
+        custom_password_reset:
+            subject: "Réinitialisation du mot de passe"
+            template: "email/password_reset.html.twig"
+            enabled: true
         user_registration:
             enabled: false
         account_verification_token:
             enabled: false
         account_verification:
+            enabled: false
+        password_reset:
             enabled: false
