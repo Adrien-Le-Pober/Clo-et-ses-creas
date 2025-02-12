@@ -84,6 +84,8 @@ export default function LoginPage() {
                     register={register("password")} 
                 />
 
+                <a href="" className="underline pb-7">J'ai oublié mon mot de passe</a>
+
                 {error && <ErrorMessage message={error} />}
 
                 <Button text={loading ? "Chargement..." : "Valider"} width="w-full" disabled={loading} />

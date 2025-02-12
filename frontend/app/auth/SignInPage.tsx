@@ -95,9 +95,6 @@ export default function SignInPage() {
                             errorMsg={errors.password ? errors.password.message : ""} 
                         />
 
-                        <a href="" className="underline">J'ai oublié mon mot de passe</a>
-                        <br/>
-
                         <div className="flex items-center pb-11">
                             <input 
                                 type="checkbox"
