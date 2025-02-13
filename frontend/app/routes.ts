@@ -7,6 +7,8 @@ export default [
     route("mon-histoire", "routes/myStory.tsx"),
     route("inscription", "routes/signIn.tsx"),
 
+    route("produit/:slug", "routes/productDetails.tsx"),
+
     ...prefix("connexion", [
         route("/", "routes/connexion/login.tsx"),
         route("mot-de-passe-oublie", "routes/connexion/forgotPassword.tsx"),

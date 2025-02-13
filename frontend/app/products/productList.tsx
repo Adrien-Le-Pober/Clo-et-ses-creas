@@ -11,6 +11,7 @@ interface Product {
     images: string[];
     price: number;
     taxon: string;
+    slug: string;
 }
 
 interface ProductListProps {
@@ -78,6 +79,7 @@ export default function ProductList({
                         images: product?.images?.map((img: any) => img.path) || [],
                         price: productVariants[0].price / 100,
                         taxon: product?.mainTaxon,
+                        slug: product?.slug,
                     };
                 });
 

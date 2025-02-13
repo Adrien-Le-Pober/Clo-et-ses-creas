@@ -1,21 +1,31 @@
 import Button from "~/components/button";
+import { useNavigate } from "react-router";
 
 interface ProductItemProps {
     id: string;
     name: string;
     images: string[];
     price: number;
+    slug: string;
 }
 
-export default function ProductItem({ name, images, price }: ProductItemProps) {
+export default function ProductItem({ name, images, price, slug }: ProductItemProps) {
     const formattedPrice = new Intl.NumberFormat("fr-FR", {
         style: "currency",
         currency: "EUR",
     }).format(price);
 
-    return (
-        <div className="flex flex-col w-64 md:w-72 xl:w-80">
+    const navigate = useNavigate();
 
+    const handleClick = () => {
+        navigate(`/produit/${slug}`);
+    }
+
+    return (
+        <div 
+            className="flex flex-col w-64 md:w-72 xl:w-80 hover:cursor-pointer"
+            onClick={handleClick}
+        >
             {images.length > 0 ? (
                 <img
                     src={images[0]}
