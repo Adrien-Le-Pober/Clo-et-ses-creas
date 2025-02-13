@@ -19,6 +19,7 @@ import error_404 from "./../assets/images/error_404.png";
 import error_404_mobile from "./../assets/images/error_404_mobile.png";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", type:"image/jpg", href:"../public/favicon.jpg" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
