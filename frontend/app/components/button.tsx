@@ -14,7 +14,7 @@ export default function Button({
     disabled = false,
     width = 'max-w-80',
     height = 'h-12',
-    margin = "p-0",
+    margin = "m-0",
     fontSize = 'text-xl',
     outlined = false,
     onClick,

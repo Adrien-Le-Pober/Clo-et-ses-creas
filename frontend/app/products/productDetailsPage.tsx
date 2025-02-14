@@ -2,19 +2,26 @@ import { useParams } from "react-router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from "~/components/loader";
+import DesktopCarousel from "~/components/DesktopCarousel";
 
 interface ProductDetails {
     name: string;
     description: string;
     price: string;
-    images: string[];
+    images: ProductImage[];
+}
+
+interface ProductImage {
+    id: number;
+    path: string;
+    type?:string;
 }
 
 export default function ProductDetailsPage() {
     const { slug } = useParams();
     const [error, setError] = useState("");
     const [loading, setLoading] = useState<boolean>(true);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+    const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 1024 : false);
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
@@ -23,11 +30,16 @@ export default function ProductDetailsPage() {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth < 1024);
+            typeof window !== "undefined" && setIsMobile(window.innerWidth < 1024);
         };
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+        typeof window !== "undefined" && window.addEventListener("resize", handleResize);
+        
+        return () => {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("resize", handleResize);
+            }
+        };
     }, []);
 
     useEffect(() => {
@@ -50,7 +62,6 @@ export default function ProductDetailsPage() {
                 }
 
                 setProductDetails(productDetails);
-                console.log(productDetails);
             } catch(err) {
                 console.error(err);
                 setError("Echec du chargement du produit.");
@@ -78,7 +89,7 @@ export default function ProductDetailsPage() {
         <>
             <div className="grid lg:grid-cols-2 pt-24">
                 <section>
-
+                    <DesktopCarousel images={productDetails?.images || []} />
                 </section>
                 <section className="flex flex-col px-14">
                     <h1 className="text-3xl lg:text-4xl pb-3.5 lg:pb-12">{productDetails?.name}</h1>
