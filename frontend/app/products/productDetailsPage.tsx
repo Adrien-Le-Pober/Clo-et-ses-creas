@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from "~/components/loader";
 import DesktopCarousel from "~/components/DesktopCarousel";
+import MobileCarousel from "~/components/mobileCarousel";
 
 interface ProductDetails {
     name: string;
@@ -89,7 +90,12 @@ export default function ProductDetailsPage() {
         <>
             <div className="grid lg:grid-cols-2 pt-24">
                 <section>
-                    <DesktopCarousel images={productDetails?.images || []} />
+                    {isMobile ?
+                        <MobileCarousel images={productDetails?.images || []} />
+                        :
+                        <DesktopCarousel images={productDetails?.images || []} />
+                    }
+                    
                 </section>
                 <section className="flex flex-col px-14">
                     <h1 className="text-3xl lg:text-4xl pb-3.5 lg:pb-12">{productDetails?.name}</h1>
