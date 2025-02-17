@@ -2,8 +2,9 @@ import { useParams } from "react-router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loader from "~/components/loader";
-import DesktopCarousel from "~/components/DesktopCarousel";
-import MobileCarousel from "~/components/mobileCarousel";
+import DesktopCarousel from "~/products/productDetailsDesktopCarousel";
+import MobileCarousel from "~/products/productDetailsMobileCarousel";
+import ProductItem from "./productItem";
 
 interface ProductDetails {
     name: string;
@@ -18,7 +19,19 @@ interface ProductImage {
     type?:string;
 }
 
+interface Product {
+    id: string;
+    name: string;
+    description: string;
+    images: string[];
+    price: number;
+    taxon: string;
+    slug: string;
+}
+
+
 export default function ProductDetailsPage() {
+    const apiURI = `${import.meta.env.VITE_API_URI}`;
     const { slug } = useParams();
     const [error, setError] = useState("");
     const [loading, setLoading] = useState<boolean>(true);
@@ -26,6 +39,7 @@ export default function ProductDetailsPage() {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
+    const [associatedProducts, setAssociatedProducts] = useState<Product[] | null>(null);
 
     const DESCRIPTION_LIMIT = 170;
 
@@ -45,34 +59,86 @@ export default function ProductDetailsPage() {
 
     useEffect(() => {
         const fetchProduct = async () => {
+            setLoading(true);
             try {
-                const product = await axios.get(`${import.meta.env.VITE_API_URI}shop/products-by-slug/${slug}`);
-                const productVariantUri = product.data.variants[0].replace(/^\/?api\/v2\//, "");
-                const productVariant = await axios.get(`${import.meta.env.VITE_API_URI}${productVariantUri}`);
-
+                if (!slug) {
+                    setError("Slug non valide.");
+                    setLoading(false);
+                    return;
+                }
+                const product = await fetchProductBySlug(slug);
+                const productVariant = await fetchProductVariant(product.variants[0]);
+                const associatedProducts = await fetchProductAssociations(product.associations);
+    
                 const formattedPrice = new Intl.NumberFormat("fr-FR", {
                     style: "currency",
                     currency: "EUR",
-                }).format(productVariant.data.price / 100);
-
-                const productDetails: ProductDetails = {
-                    name: product.data.name,
-                    description: product.data.description,
+                }).format(productVariant.price / 100);
+    
+                setProductDetails({
+                    name: product.name,
+                    description: product.description,
                     price: formattedPrice,
-                    images: product.data.images,
-                }
-
-                setProductDetails(productDetails);
-            } catch(err) {
+                    images: product.images,
+                });
+    
+                setAssociatedProducts(associatedProducts);
+            } catch (err) {
                 console.error(err);
-                setError("Echec du chargement du produit.");
+                setError("Échec du chargement du produit.");
             } finally {
                 setLoading(false);
             }
+        };
+    
+        fetchProduct();
+    }, [slug]);
+    
+
+    const fetchProductBySlug = async (slug: string) => {
+        const product = await axios.get(`${apiURI}shop/products-by-slug/${slug}`);
+        return product.data;
+    };
+    
+    const fetchProductVariant = async (variantUri: string) => {
+        const cleanedUri = variantUri.replace(/^\/?api\/v2\//, "");
+        const variant = await axios.get(`${apiURI}${cleanedUri}`);
+        return variant.data;
+    };
+    
+    const fetchProductAssociations = async (associationsUris: string[]) => {
+        let associatedProductsUris: string[] = [];
+    
+        for (let productAssociationUri of associationsUris) {
+            const cleanedUri = productAssociationUri.replace(/^\/?api\/v2\//, "");
+            let productAssociation = await axios.get(`${apiURI}${cleanedUri}`);
+            associatedProductsUris.push(...productAssociation.data.associatedProducts);
         }
 
-        fetchProduct();
-    }, []);
+        // Limiter à 3 produits
+        associatedProductsUris = associatedProductsUris.slice(0, 3);
+    
+        let associatedProducts: Product[] = [];
+        for (let productUri of associatedProductsUris) {
+            const cleanedUri = productUri.replace(/^\/?api\/v2\//, "");
+            let product = await axios.get(`${apiURI}${cleanedUri}`);
+
+            const productVariantUri = product.data.variants[0]?.replace(/^\/?api\/v2\//, "");
+            let productVariant = productVariantUri ? await axios.get(`${apiURI}${productVariantUri}`) : null;
+    
+            associatedProducts.push({
+                id: product.data.id,
+                name: product.data.name,
+                description: product.data.description,
+                images: product.data.images.map((img: any) => img.path),
+                price: productVariant?.data.price / 100,
+                taxon: product.data.mainTaxon,
+                slug: product.data.slug,
+            });
+        }
+    
+        return associatedProducts;
+    };
 
     const handleReadMore = () => {
         setShowFullDescription(true);
@@ -113,7 +179,18 @@ export default function ProductDetailsPage() {
                     <p className="text-2xl lg:text-3xl text-[#A9636C] order-2 pb-10 lg:pb-12 lg:order-3">{productDetails?.price}</p>
                 </section>
             </div>
-            <section></section>
+            {associatedProducts && associatedProducts.length > 0 && (
+                <section className="my-12 text-center">
+                    <h2 className="text-4xl mb-6">Vous pourriez aussi aimer</h2>
+                    <div className="flex flex-col items-center lg:justify-center lg:flex-row">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {associatedProducts.map((product) => (
+                                <ProductItem key={product.id} {...product} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
         </>
     );
 }
