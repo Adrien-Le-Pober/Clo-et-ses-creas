@@ -70,9 +70,9 @@ export default function Navbar() {
                         <a href="#favorites">
                             <FavoriteBorderOutlinedIcon className="lg:w-9 lg:h-9" />
                         </a>
-                        <a href="#cart">
+                        <Link to="/panier">
                             <ShoppingBagOutlinedIcon className="lg:w-9 lg:h-9"/>
-                        </a>
+                        </Link>
                         <a href="#profile">
                             <PersonIcon
                                 className="lg:w-9 lg:h-9"
