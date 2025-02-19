@@ -6,7 +6,7 @@ interface Button {
     margin?: string;
     fontSize?: string;
     outlined?: boolean;
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function Button({ 
