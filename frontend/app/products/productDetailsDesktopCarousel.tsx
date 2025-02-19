@@ -9,6 +9,7 @@ import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper as SwiperType } from "swiper";
 import Button from "../components/button";
+import { useCart } from "~/order/cart/CartContext";
 
 interface ProductImage {
     id: number;
@@ -18,12 +19,14 @@ interface ProductImage {
 
 interface DesktopCarouselProps {
     images: ProductImage[];
+    code: string;
 }
 
-export default function DesktopCarousel({ images }: DesktopCarouselProps) {
+export default function DesktopCarousel({ images, code }: DesktopCarouselProps) {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
     const prevRef = useRef(null);
     const nextRef = useRef(null);
+    const {addItem} = useCart();
 
     if (!images.length) return <p>Aucune image disponible</p>;
 
@@ -68,7 +71,14 @@ export default function DesktopCarousel({ images }: DesktopCarouselProps) {
             )}
 
             <div className="flex justify-center">
-                <Button text="Ajouter au panier" width="w-[350px]" height="h-14" margin="mb-32 mt-14" fontSize="text-3xl"/>
+                <Button 
+                    text="Ajouter au panier"
+                    width="w-[350px]"
+                    height="h-14"
+                    margin="mb-32 mt-14"
+                    fontSize="text-3xl"
+                    onClick={() => addItem(code)}
+                />
             </div>
         </>
     );

@@ -7,6 +7,7 @@ import MobileCarousel from "~/products/productDetailsMobileCarousel";
 import ProductItem from "./productItem";
 
 interface ProductDetails {
+    code: string;
     name: string;
     description: string;
     price: string;
@@ -21,6 +22,7 @@ interface ProductImage {
 
 interface Product {
     id: string;
+    code: string;
     name: string;
     description: string;
     images: string[];
@@ -76,6 +78,7 @@ export default function ProductDetailsPage() {
                 }).format(productVariant.price / 100);
     
                 setProductDetails({
+                    code: productVariant.code,
                     name: product.name,
                     description: product.description,
                     price: formattedPrice,
@@ -127,7 +130,8 @@ export default function ProductDetailsPage() {
             let productVariant = productVariantUri ? await axios.get(`${apiURI}${productVariantUri}`) : null;
     
             associatedProducts.push({
-                id: product.data.id,
+                id: productVariant?.data.id,
+                code: productVariant?.data.code,
                 name: product.data.name,
                 description: product.data.description,
                 images: product.data.images.map((img: any) => img.path),
@@ -156,12 +160,13 @@ export default function ProductDetailsPage() {
         <>
             <div className="grid lg:grid-cols-2 pt-24">
                 <section>
-                    {isMobile ?
-                        <MobileCarousel images={productDetails?.images || []} />
-                        :
-                        <DesktopCarousel images={productDetails?.images || []} />
-                    }
-                    
+                    {productDetails?.code && (
+                        isMobile ? (
+                            <MobileCarousel images={productDetails?.images || []} code={productDetails.code} />
+                        ) : (
+                            <DesktopCarousel images={productDetails?.images || []} code={productDetails.code} />
+                        )
+                    )}
                 </section>
                 <section className="flex flex-col px-14">
                     <h1 className="text-3xl lg:text-4xl pb-3.5 lg:pb-12">{productDetails?.name}</h1>

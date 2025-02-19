@@ -1,21 +1,25 @@
 import Button from "~/components/button";
 import { useNavigate } from "react-router";
+import { useCart } from "~/order/cart/CartContext";
 
 interface ProductItemProps {
     id: string;
+    code: string;
     name: string;
     images: string[];
     price: number;
     slug: string;
 }
 
-export default function ProductItem({ name, images, price, slug }: ProductItemProps) {
+export default function ProductItem({ code, name, images, price, slug }: ProductItemProps) {
     const formattedPrice = new Intl.NumberFormat("fr-FR", {
         style: "currency",
         currency: "EUR",
     }).format(price);
 
     const navigate = useNavigate();
+
+    const { addItem } = useCart();
 
     const handleClick = () => {
         navigate(`/produit/${slug}`);
@@ -40,7 +44,15 @@ export default function ProductItem({ name, images, price, slug }: ProductItemPr
 
             <p className="text-3xl">{name}</p>
             <span className="place-self-end text-3xl">{formattedPrice}</span>
-            <Button text="Ajouter au panier" height="h-14" fontSize="text-3xl" />
+            <Button 
+                text="Ajouter au panier"
+                height="h-14"
+                fontSize="text-3xl"
+                onClick={(event) => {
+                    event.stopPropagation();
+                    addItem(code);
+                }}
+            />
         </div>
     );
 }

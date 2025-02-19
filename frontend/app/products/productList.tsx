@@ -6,6 +6,7 @@ import Button from "~/components/button";
 
 interface Product {
     id: string;
+    code: string;
     name: string;
     description: string;
     images: string[];
@@ -74,6 +75,7 @@ export default function ProductList({
                     );
                     return {
                         id: product?.id,
+                        code: productVariants[0].code,
                         name: product?.name || "",
                         description: product?.description || "",
                         images: product?.images?.map((img: any) => img.path) || [],

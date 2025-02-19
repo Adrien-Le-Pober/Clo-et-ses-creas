@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Virtual, Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -14,9 +14,10 @@ interface ProductImage {
 
 interface MobileCarouselProps {
     images: ProductImage[];
+    code: string;
 }
 
-export default function MobileCarousel({ images }: MobileCarouselProps) {
+export default function MobileCarousel({ images, code }: MobileCarouselProps) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     if (!images.length) return <p>Aucune image disponible</p>;

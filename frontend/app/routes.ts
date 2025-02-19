@@ -9,6 +9,8 @@ export default [
 
     route("produit/:slug", "routes/productDetails.tsx"),
 
+    route("panier", "routes/cart.tsx"),
+
     ...prefix("connexion", [
         route("/", "routes/connexion/login.tsx"),
         route("mot-de-passe-oublie", "routes/connexion/forgotPassword.tsx"),

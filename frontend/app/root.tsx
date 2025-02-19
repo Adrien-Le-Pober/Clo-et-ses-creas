@@ -17,6 +17,7 @@ import Footer from "./layouts/footer";
 
 import error_404 from "./../assets/images/error_404.png";
 import error_404_mobile from "./../assets/images/error_404_mobile.png";
+import { CartProvider } from "./order/cart/CartContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", type:"image/jpg", href:"../public/favicon.jpg" },
@@ -36,29 +37,31 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <Meta />
-          <Links />
-        </head>
-        <body>
-          
-          <header>
-            <Navbar/>
-          </header>
+      <CartProvider>
+        <html lang="en">
+          <head>
+            <meta charSet="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <Meta />
+            <Links />
+          </head>
+          <body>
+            
+            <header>
+              <Navbar/>
+            </header>
 
-          <main className="container mx-auto min-h-56">
-            {children}
-          </main>
-          
-          <Footer/>
+            <main className="container mx-auto min-h-56">
+              {children}
+            </main>
+            
+            <Footer/>
 
-          <ScrollRestoration />
-          <Scripts />
-        </body>
-      </html>
+            <ScrollRestoration />
+            <Scripts />
+          </body>
+        </html>
+      </CartProvider>
     </AuthProvider>
   );
 }
