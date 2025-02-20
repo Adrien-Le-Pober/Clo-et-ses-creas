@@ -15,23 +15,17 @@ interface CartProps {
     items: CartItem[];
     totalPrice: number;
     removeItem: (itemId: string) => void;
-    updateItemQuantity: (itemId: string, quantity: number) => void;
+    handleIncrement: (itemId: string, quantity: number) => void;
+    handleDecrement: (itemId: string, quantity: number) => void;
 }
 
-export default function CartDesktop({ items, totalPrice, removeItem, updateItemQuantity }: CartProps) {
-
-    const handleIncrement = (itemId: string, quantity: number) => {
-        const newQuantity = quantity + 1;
-        updateItemQuantity(itemId, newQuantity);
-    };
-
-    const handleDecrement = (itemId: string, quantity: number) => {
-        if (quantity > 1) {
-            const newQuantity = quantity - 1;
-            updateItemQuantity(itemId, newQuantity);
-        }
-    };
-
+export default function CartDesktop({
+        items,
+        totalPrice,
+        removeItem,
+        handleIncrement,
+        handleDecrement
+    }: CartProps) {
     return (
         <>
             <div className="grid grid-cols-[repeat(16,_1fr)] py-10 bg-primary text-secondary text-2xl">

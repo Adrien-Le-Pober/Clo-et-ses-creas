@@ -23,18 +23,37 @@ export default function CartPage() {
         };
     }, []);
 
+    const handleIncrement = (itemId: string, quantity: number) => {
+        const newQuantity = quantity + 1;
+        updateItemQuantity(itemId, newQuantity);
+    };
+
+    const handleDecrement = (itemId: string, quantity: number) => {
+        if (quantity > 1) {
+            const newQuantity = quantity - 1;
+            updateItemQuantity(itemId, newQuantity);
+        }
+    };
+
     return (
         <>
-            <h1 className="text-center text-2xl lg:text-4xl mt-16 mb-14">Panier d'achat</h1>
+            <h1 className="text-center text-3xl lg:text-4xl mt-16 mb-14">Panier d'achat</h1>
             <section className="">
                 {isMobile ? (
-                    <CartMobile/>
+                    <CartMobile
+                        items={state.items}
+                        totalPrice={totalPrice}
+                        removeItem={removeItem} 
+                        handleIncrement={handleIncrement}
+                        handleDecrement={handleDecrement}
+                    />
                 ) : (
                     <CartDesktop 
                         items={state.items}
                         totalPrice={totalPrice}
                         removeItem={removeItem} 
-                        updateItemQuantity={updateItemQuantity} 
+                        handleIncrement={handleIncrement}
+                        handleDecrement={handleDecrement}
                     />
                 )}
             </section>
