@@ -6,6 +6,7 @@ interface Button {
     margin?: string;
     fontSize?: string;
     outlined?: boolean;
+    customClasses?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -17,9 +18,10 @@ export default function Button({
     margin = "m-0",
     fontSize = 'text-xl',
     outlined = false,
+    customClasses = "",
     onClick,
 }: Button) {
-    const buttonClass = `rounded-[10px] ${width} ${height} ${fontSize} ${margin}
+    const buttonClass = `rounded-[10px] ${width} ${height} ${fontSize} ${margin} ${customClasses}
         ${outlined ?
             'border border-primary hover:bg-primary hover:text-secondary'
             : 

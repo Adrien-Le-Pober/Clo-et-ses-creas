@@ -26,7 +26,6 @@ export default function CartDesktop({ items, totalPrice, removeItem, updateItemQ
     };
 
     const handleDecrement = (itemId: string, quantity: number) => {
-        console.log(items);
         if (quantity > 1) {
             const newQuantity = quantity - 1;
             updateItemQuantity(itemId, newQuantity);
@@ -81,9 +80,9 @@ export default function CartDesktop({ items, totalPrice, removeItem, updateItemQ
             {/* Récapitulatif du panier */}
             <div className="grid grid-cols-2 text-2xl mb-16">
                 <div></div>
-                <div className="border-s border-b border-e pt-9 pb-14 px-10">
+                <div className="flex flex-col border-s border-b border-e pt-9 pb-14 px-10">
                     <p>Total : {totalPrice / 100} €</p>
-                    <Button text="Valider" width="w-full" margin="mt-10"/>
+                    <Button text="Valider" width="w-[calc(100%-80px)] max-w-[500px]" margin="mt-10" customClasses='self-center'/>
                 </div>
             </div>
         </>
