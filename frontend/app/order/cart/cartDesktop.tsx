@@ -13,11 +13,12 @@ interface CartItem {
 
 interface CartProps {
     items: CartItem[];
+    totalPrice: number;
     removeItem: (itemId: string) => void;
     updateItemQuantity: (itemId: string, quantity: number) => void;
 }
 
-export default function CartDesktop({ items, removeItem, updateItemQuantity }: CartProps) {
+export default function CartDesktop({ items, totalPrice, removeItem, updateItemQuantity }: CartProps) {
 
     const handleIncrement = (itemId: string, quantity: number) => {
         const newQuantity = quantity + 1;
@@ -81,7 +82,7 @@ export default function CartDesktop({ items, removeItem, updateItemQuantity }: C
             <div className="grid grid-cols-2 text-2xl mb-16">
                 <div></div>
                 <div className="border-s border-b border-e pt-9 pb-14 px-10">
-                    <p>Total : </p>
+                    <p>Total : {totalPrice / 100} €</p>
                     <Button text="Valider" width="w-full" margin="mt-10"/>
                 </div>
             </div>
