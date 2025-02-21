@@ -51,7 +51,7 @@ export default function CartDesktop({
                         {item.productName}
                     </div>
                     <div className="col-[9_/_span_2] flex justify-center items-center text-center text-2xl">
-                        {item.unitPrice / 100}€
+                        {item.unitPrice / 100} €
                     </div>
                     <div className="col-[11_/_span_3] flex justify-center items-center text-center">
                         <button onClick={() => handleDecrement(item.id, item.quantity)}>

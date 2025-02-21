@@ -11,6 +11,8 @@ export default [
 
     route("panier", "routes/cart.tsx"),
 
+    route("validation-commande", "routes/checkoutFlow.tsx"),
+
     ...prefix("connexion", [
         route("/", "routes/connexion/login.tsx"),
         route("mot-de-passe-oublie", "routes/connexion/forgotPassword.tsx"),
