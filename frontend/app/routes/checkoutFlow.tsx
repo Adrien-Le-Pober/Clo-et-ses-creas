@@ -22,7 +22,7 @@ export default function CheckoutFlow() {
     const prevStep = () => setStep((prev) => (prev > 0 ? prev - 1 : prev));
 
     return (
-        <div className="p-4">
+        <div className="py-4">
             <CheckoutProgress step={step} />
             <div className="mt-4">
                 {step === 0 && <StepCustomerAddress onNext={nextStep} />}

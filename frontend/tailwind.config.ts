@@ -5,7 +5,7 @@ export default {
   theme: {
     colors: {
       primary: '#852525',
-      secondary: '#FFF7ED', 
+      secondary: '#FFF7ED',
     },
     extend: {
       fontFamily: {
