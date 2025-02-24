@@ -6,6 +6,7 @@ interface InputProps {
     name: string;
     type?: string;
     width?: string;
+    customClasses?: string;
     errorMsg?: string;
     register?: UseFormRegisterReturn;
 }
@@ -15,10 +16,11 @@ export default function Input({
     name,
     type = 'text',
     width = "w-full",
+    customClasses,
     errorMsg,
     register,
 }: InputProps) {
-    const inputClass=`border rounded-lg px-2 ${width}`
+    const inputClass=`border rounded-lg px-2 ${width} ${customClasses}`
 
     return (
         <>
