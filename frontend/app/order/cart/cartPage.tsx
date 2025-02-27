@@ -3,6 +3,7 @@ import CartMobile from "./cartMobile";
 import CartDesktop from "./cartDesktop";
 import { useCart } from "./CartContext";
 import { useNavigate } from "react-router";
+import Loader from "~/components/loader";
 
 export default function CartPage() {
     const navigate = useNavigate();
@@ -40,6 +41,8 @@ export default function CartPage() {
     const handleSubmit = () => {
         navigate("/validation-commande");
     }
+
+    if (state.loading) return <Loader/>;
 
     return (
         <>

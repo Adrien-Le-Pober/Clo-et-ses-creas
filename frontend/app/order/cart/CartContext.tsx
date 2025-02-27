@@ -86,6 +86,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         const fetchCart = async () => {
+            dispatch({ type: "SET_LOADING", payload: true });
+
             let cartToken = localStorage.getItem("cartToken");
 
             if (cartToken && !state.cartToken) {
@@ -112,6 +114,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 dispatch({ type: "SET_ITEMS", payload: data.items || [] });
             } catch (error) {
                 dispatch({ type: "SET_ERROR", payload: "Impossible de charger le panier." });
+            } finally {
+                dispatch({ type: "SET_LOADING", payload: false });
             }
         };
 
