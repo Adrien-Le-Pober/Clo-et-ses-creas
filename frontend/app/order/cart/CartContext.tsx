@@ -25,13 +25,14 @@ type CartAction =
     | { type: "SET_LOADING"; payload: boolean }
     | { type: "SET_ERROR"; payload: string | null };
 
-    const CartContext = createContext<{
-        state: CartState;
-        dispatch: React.Dispatch<CartAction>;
-        addItem: (productVariantCode: string, quantity?: number) => Promise<void>;
-        removeItem: (itemCode: string) => Promise<void>;
-        updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
-    } | undefined>(undefined);
+const CartContext = createContext<{
+    state: CartState;
+    dispatch: React.Dispatch<CartAction>;
+    addItem: (productVariantCode: string, quantity?: number) => Promise<void>;
+    removeItem: (itemCode: string) => Promise<void>;
+    updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
+    updateCart: (updateData: Partial<{ email: string, billingAddress: object, shippingAddress: object, couponCode: string }>) => Promise<void>;
+} | undefined>(undefined);
 
 const apiURI = import.meta.env.VITE_API_URI;
 
@@ -121,17 +122,43 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         try {
             let cartToken = state.cartToken;
             if (!cartToken) return;
-
+    
             const { data } = await axios.post(`${apiURI}shop/orders/${cartToken}/items`, { 
                 productVariant: productVariantCode, 
                 quantity 
             });
-
+    
             dispatch({ type: "SET_ITEMS", payload: data.items || [] });
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Erreur lors de l'ajout au panier." });
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.description || "";
+            
+            if (error.response?.status === 500 && errorMessage.includes("Cart with given token has not been found")) {
+                try {
+                    const { data } = await axios.post(`${apiURI}shop/orders`, {}, {
+                        headers: { "Content-Type": "application/ld+json" },
+                    });
+    
+                    const newCartToken = data.tokenValue;
+    
+                    if (newCartToken) {
+                        dispatch({ type: "SET_CART_TOKEN", payload: newCartToken });
+    
+                        const { data: newData } = await axios.post(`${apiURI}shop/orders/${newCartToken}/items`, { 
+                            productVariant: productVariantCode, 
+                            quantity 
+                        });
+    
+                        dispatch({ type: "SET_ITEMS", payload: newData.items || [] });
+                    }
+                } catch (createError) {
+                    dispatch({ type: "SET_ERROR", payload: "Impossible de recréer le panier." });
+                }
+            } else {
+                dispatch({ type: "SET_ERROR", payload: "Erreur lors de l'ajout au panier." });
+            }
         }
     };
+    
 
     const removeItem = async (itemId: string) => {
         try {
@@ -163,8 +190,31 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const updateCart = async (updateData: Partial<{ email: string, billingAddress: object, shippingAddress: object, couponCode: string }>) => {
+        try {
+            if (!state.cartToken) return;
+    
+            const { data } = await axios.get(`${apiURI}shop/orders/${state.cartToken}`);
+    
+            const updatedOrder = {
+                email: updateData.email || data.email,
+                billingAddress: updateData.billingAddress || data.billingAddress,
+                shippingAddress: updateData.shippingAddress || data.shippingAddress,
+                couponCode: updateData.couponCode || data.couponCode,
+            };
+    
+            await axios.put(`${apiURI}shop/orders/${state.cartToken}`, updatedOrder, {
+                headers: { "Content-Type": "application/ld+json" },
+            });
+    
+        } catch (error) {
+            dispatch({ type: "SET_ERROR", payload: "Erreur lors de la mise à jour du panier." });
+        }
+    };
+    
+
     return (
-        <CartContext.Provider value={{ state, dispatch, addItem, removeItem, updateItemQuantity }}>
+        <CartContext.Provider value={{ state, dispatch, addItem, removeItem, updateItemQuantity, updateCart }}>
             {children}
         </CartContext.Provider>
     );
