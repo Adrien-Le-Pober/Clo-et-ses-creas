@@ -35,28 +35,34 @@ export default function CartPage() {
         }
     };
 
+    console.log(state);
+
     return (
         <>
             <h1 className="text-center text-3xl lg:text-4xl mt-16 mb-14">Panier d'achat</h1>
-            <section className="">
-                {isMobile ? (
-                    <CartMobile
-                        items={state.items}
-                        totalPrice={totalPrice}
-                        removeItem={removeItem} 
-                        handleIncrement={handleIncrement}
-                        handleDecrement={handleDecrement}
-                    />
-                ) : (
-                    <CartDesktop 
-                        items={state.items}
-                        totalPrice={totalPrice}
-                        removeItem={removeItem} 
-                        handleIncrement={handleIncrement}
-                        handleDecrement={handleDecrement}
-                    />
-                )}
-            </section>
+            {state.items.length > 0 ? (
+                <section>
+                    {isMobile ? (
+                        <CartMobile
+                            items={state.items}
+                            totalPrice={totalPrice}
+                            removeItem={removeItem} 
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                        />
+                    ) : (
+                        <CartDesktop 
+                            items={state.items}
+                            totalPrice={totalPrice}
+                            removeItem={removeItem} 
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                        />
+                    )}
+                </section>
+            ) : (
+                <p className="text-center text-xl">Le panier est vide</p>
+            )}
         </>
     )
 }
