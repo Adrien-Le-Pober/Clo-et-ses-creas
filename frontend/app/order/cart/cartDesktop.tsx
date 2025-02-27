@@ -17,6 +17,7 @@ interface CartProps {
     removeItem: (itemId: string) => void;
     handleIncrement: (itemId: string, quantity: number) => void;
     handleDecrement: (itemId: string, quantity: number) => void;
+    handleSubmit: () => void;
 }
 
 export default function CartDesktop({
@@ -24,7 +25,8 @@ export default function CartDesktop({
         totalPrice,
         removeItem,
         handleIncrement,
-        handleDecrement
+        handleDecrement,
+        handleSubmit
     }: CartProps) {
     return (
         <>
@@ -76,7 +78,7 @@ export default function CartDesktop({
                 <div></div>
                 <div className="flex flex-col border-s border-b border-e pt-9 pb-14 px-10">
                     <p>Total : {totalPrice / 100} €</p>
-                    <Button text="Valider" width="w-[calc(100%-80px)] max-w-[500px]" margin="mt-10" customClasses='self-center'/>
+                    <Button text="Valider" width="w-[calc(100%-80px)] max-w-[500px]" margin="mt-10" customClasses='self-center' onClick={handleSubmit} />
                 </div>
             </div>
         </>

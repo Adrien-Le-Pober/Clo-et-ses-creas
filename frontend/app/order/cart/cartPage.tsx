@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import CartMobile from "./cartMobile";
 import CartDesktop from "./cartDesktop";
 import { useCart } from "./CartContext";
+import { useNavigate } from "react-router";
 
 export default function CartPage() {
+    const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 1024 : false);
     const { state, removeItem, updateItemQuantity } = useCart();
 
@@ -35,7 +37,9 @@ export default function CartPage() {
         }
     };
 
-    console.log(state);
+    const handleSubmit = () => {
+        navigate("/validation-commande");
+    }
 
     return (
         <>
@@ -49,6 +53,7 @@ export default function CartPage() {
                             removeItem={removeItem} 
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
+                            handleSubmit={handleSubmit}
                         />
                     ) : (
                         <CartDesktop 
@@ -57,6 +62,7 @@ export default function CartPage() {
                             removeItem={removeItem} 
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
+                            handleSubmit={handleSubmit}
                         />
                     )}
                 </section>

@@ -17,6 +17,7 @@ interface CartProps {
     removeItem: (itemId: string) => void;
     handleIncrement: (itemId: string, quantity: number) => void;
     handleDecrement: (itemId: string, quantity: number) => void;
+    handleSubmit: () => void;
 }
 
 export default function CartMobile({        
@@ -24,7 +25,8 @@ export default function CartMobile({
     totalPrice,
     removeItem,
     handleIncrement,
-    handleDecrement
+    handleDecrement,
+    handleSubmit
 }: CartProps) {
     return (
         <>
@@ -67,7 +69,7 @@ export default function CartMobile({
                 text-3xl"
             >
                 <p>Total : {totalPrice / 100} €</p>
-                <Button text="Valider" width="w-full" margin="mt-10" customClasses='self-center'/>
+                <Button text="Valider" width="w-full" margin="mt-10" customClasses='self-center' onClick={handleSubmit}/>
             </div>
         </>
     )
