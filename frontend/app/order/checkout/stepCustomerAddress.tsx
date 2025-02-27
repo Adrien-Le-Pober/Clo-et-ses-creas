@@ -4,10 +4,17 @@ import Input from "~/components/input";
 import { useForm } from "react-hook-form";
 import { customerAddressSchema } from "./formSchema/customerAddressSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "~/auth/authContext";
+import { useCart } from "../cart/CartContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ErrorMessage from "~/components/errorMessage";
+import Loader from "~/components/loader";
 
-interface SignUpFormData {
+interface AddressFormData {
     firstName: string,
     lastName: string,
+    email: string,
     countryCode: string,
     street: string,
     addressAdditional?: string,
@@ -17,20 +24,66 @@ interface SignUpFormData {
 }
 
 export default function StepCustomerAddress({ onNext }: StepProps) {
+    const { isAuthenticated } = useAuth();
+    const { updateCart } = useCart();
+    const [isSubmit, setIsSubmit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [countries, setCountries] = useState<{ code: string; name: string }[]>([]);
+
     const { 
         register, 
         handleSubmit, 
-        reset, 
         formState: { errors } 
-    } = useForm<SignUpFormData>({
+    } = useForm<AddressFormData>({
         resolver: yupResolver(customerAddressSchema),
     });
+
+    useEffect(() => {
+        const fetchCountries = async () => {
+            setIsLoading(true);
+            try {
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URI}shop/countries`);
+                const countryList = data["hydra:member"].map((country: any) => ({
+                    code: country.code,
+                    name: country.name,
+                }));
+                setCountries(countryList);
+            } catch (error) {
+                console.error("Erreur lors du chargement des pays", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCountries();
+    }, []);
+
+    const onSubmit = async (data: AddressFormData) => {
+        setIsSubmit(true);
+        await updateCart({ 
+            email: data.email,
+            billingAddress: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                countryCode: data.countryCode,
+                street: data.street,
+                addressAdditional: data.addressAdditional,
+                city: data.city,
+                postcode: data.postcode,
+                phoneNumber: data.phoneNumber,
+            },
+        });
+        setIsSubmit(false);
+        onNext();
+    };
+
+    if (isLoading) return <Loader/>;
 
     return (
         <div className="p-4">
             <h2 className="text-center text-4xl mb-12">Mes informations</h2>
-            <form onSubmit={(e) => { e.preventDefault(); onNext(); }} className="flex flex-col items-center w-full">
-                <div className="flex flex-col items-center w-[555px]">
+            <form onSubmit={handleSubmit(onSubmit) } className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center w-[300px] sm:w-[555px]">
                     <div className="flex w-full justify-between">
                         <Input 
                             label="Prénom"
@@ -38,7 +91,7 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                             name="firstName"
                             register={register("firstName")}
                             errorMsg={errors.firstName ? errors.firstName.message : ""}
-                            width="w-[255px]"
+                            width="w-[140px] sm:w-[255px]"
                         />
                         <Input 
                             label="Nom"
@@ -46,24 +99,41 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                             name="lastName"
                             register={register("lastName")}
                             errorMsg={errors.lastName ? errors.lastName.message : ""}
-                            width="w-[255px]"
+                            width="w-[140px] sm:w-[255px]"
                         />
                     </div>
-                    <Input 
-                        label="Pays / région"
-                        type="text"
-                        name="countryCode"
-                        register={register("countryCode")}
-                        errorMsg={errors.countryCode ? errors.countryCode.message : ""}
-                        width="w-[555px]"
-                    />
+                    {!isAuthenticated && (
+                        <Input 
+                            label="Email"
+                            type="email"
+                            name="email"
+                            register={register("email")}
+                            errorMsg={errors.email ? errors.email.message : ""}
+                            width="w-[300px] sm:w-[555px]"
+                        />
+                    )}
+                    <div className="flex flex-col pb-7 w-[300px] sm:w-[555px]">
+                        <label className="pb-3 md:pb-5">Pays / région</label>
+                        <select
+                            {...register("countryCode")}
+                            className="border rounded-lg px-2 h-7"
+                        >
+                            <option value="">Sélectionnez un pays</option>
+                            {countries.map((country) => (
+                                <option key={country.code} value={country.code}>
+                                    {country.name}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.countryCode && <ErrorMessage message={errors.countryCode.message || ""}/>}
+                    </div>
                     <Input 
                         label="Adresse"
                         type="text"
                         name="street"
                         register={register("street")}
                         errorMsg={errors.street ? errors.street.message : ""}
-                        width="w-[555px]"
+                        width="w-[300px] sm:w-[555px]"
                     />
                     <Input 
                         label="Complément d'adresse (optionnel)"
@@ -71,16 +141,16 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                         name="addressAdditional"
                         register={register("addressAdditional")}
                         errorMsg={errors.addressAdditional ? errors.addressAdditional.message : ""}
-                        width="w-[555px]"
+                        width="w-[300px] sm:w-[555px]"
                     />
-                    <div className="flex justify-between w-[555px]">
+                    <div className="flex w-full justify-between sm:w-[555px]">
                         <Input 
                             label="Code postal"
                             type="text"
                             name="postcode"
                             register={register("postcode")}
                             errorMsg={errors.postcode ? errors.postcode.message : ""}
-                            customClasses="w-32"
+                            customClasses="w-[75px] sm:w-[100px]"
                         />
                         <Input 
                             label="Ville"
@@ -88,7 +158,7 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                             name="city"
                             register={register("city")}
                             errorMsg={errors.city ? errors.city.message : ""}
-                            customClasses="w-96"
+                            customClasses="w-[200px] sm:w-[300px]"
                         />
                     </div>
                     <Input 
@@ -97,10 +167,10 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                         name="phoneNumber"
                         register={register("phoneNumber")}
                         errorMsg={errors.phoneNumber ? errors.phoneNumber.message : ""}
-                        width="w-[555px]"
+                        width="w-[300px] sm:w-[555px]"
                     />
                 </div>
-                <Button text="Suivant" width="w-[350px]" customClasses="my-20 px-4"/>
+                <Button text="Suivant" width="sm:w-[350px]" customClasses="my-10 sm:my-20 px-4" disabled={isSubmit}/>
             </form>
         </div>
     );

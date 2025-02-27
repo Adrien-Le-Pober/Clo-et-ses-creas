@@ -15,6 +15,11 @@ export const customerAddressSchema = yup.object({
         .min(2, "Le nom doit contenir au moins 2 caractères.")
         .max(255, "Le nom ne peut pas dépasser 255 caractères.")
         .matches(nameRegex, "Le nom contient des caractères invalides."),
+    email: yup
+        .string()
+        .required("Veuillez saisir votre email.")
+        .email("L'adresse email est invalide.")
+        .max(254, "L'adresse email ne peut pas dépasser 254 caractères."),
     countryCode: yup
         .string()
         .required("Veuillez saisir votre code postal."),
