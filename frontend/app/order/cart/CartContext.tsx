@@ -111,7 +111,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
             try {
                 const { data } = await axios.get(`${apiURI}shop/orders/${cartToken}`);
-                console.log(data);
                 dispatch({ type: "SET_ITEMS", payload: data.items || [] });
             } catch (error) {
                 dispatch({ type: "SET_ERROR", payload: "Impossible de charger le panier." });
@@ -200,8 +199,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             if (!state.cartToken) return;
     
             const { data } = await axios.get(`${apiURI}shop/orders/${state.cartToken}`);
-
-            console.log(updateData.billingAddress);
     
             const updatedOrder = {
                 email: updateData.email || data.email,
@@ -210,11 +207,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 couponCode: updateData.couponCode || data.couponCode,
             };
     
-            const { data: updatedOrderData } = await axios.put(`${apiURI}shop/orders/${state.cartToken}`, updatedOrder, {
+            await axios.put(`${apiURI}shop/orders/${state.cartToken}`, updatedOrder, {
                 headers: { "Content-Type": "application/ld+json" },
             });
-
-            console.log(updatedOrderData);
     
         } catch (error) {
             dispatch({ type: "SET_ERROR", payload: "Erreur lors de la mise à jour du panier." });
