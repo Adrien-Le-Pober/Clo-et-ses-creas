@@ -25,6 +25,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "bitbag/shipping-export-plugin": "^4.0",
         "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.5",
         "sylius/mailer-bundle": "*",

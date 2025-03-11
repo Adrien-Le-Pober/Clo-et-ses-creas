@@ -40,7 +40,6 @@ return [
     Sylius\Bundle\PayumBundle\SyliusPayumBundle::class => ['all' => true],
     Sylius\Bundle\ThemeBundle\SyliusThemeBundle::class => ['all' => true],
     Sylius\Bundle\AdminBundle\SyliusAdminBundle::class => ['all' => true],
-    /* Sylius\Bundle\ShopBundle\SyliusShopBundle::class => ['all' => true], */
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
@@ -61,4 +60,5 @@ return [
     Sylius\TwigExtra\Symfony\SyliusTwigExtraBundle::class => ['all' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
+    BitBag\SyliusShippingExportPlugin\BitBagSyliusShippingExportPlugin::class => ['all' => true],
 ];

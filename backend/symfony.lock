@@ -16,6 +16,19 @@
     "babdev/pagerfanta-bundle": {
         "version": "v4.5.0"
     },
+    "bitbag/shipping-export-plugin": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "92782b61536c8d9d29f3e7341fee798b46b96d04"
+        },
+        "files": [
+            "./config/packages/bitbag_shipping_export_plugin.yaml",
+            "./config/routes/bitbag_shipping_export_plugin.yaml"
+        ]
+    },
     "doctrine/annotations": {
         "version": "2.0",
         "recipe": {
