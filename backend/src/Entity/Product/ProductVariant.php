@@ -13,7 +13,7 @@ use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
 #[ORM\Table(name: 'sylius_product_variant')]
 class ProductVariant extends BaseProductVariant
 {
-    #[Groups(["sylius:shop:product_variant:show", "sylius:shop:cart:show"])]
+    #[Groups(["sylius:shop:product_variant:show"])]
     public function getWeight(): ?float
     {
         return parent::getWeight();
