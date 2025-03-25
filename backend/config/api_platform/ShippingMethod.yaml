@@ -1,0 +1,53 @@
+resources:
+    '%sylius.model.shipping_method.class%':
+        operations:
+            ApiPlatform\Metadata\Post:
+                name: shop_shipping_method_get_relay_points
+                uriTemplate: '/shop/shipping-methods/{code}/relay-points'
+                controller: App\Controller\ShippingMethodController::getRelayPoints
+                openapi:
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        postcode:
+                                            type: string
+                                            description: 'Le code postal pour la recherche des points relais'
+                                        countryCode:
+                                            type: string
+                                            description: 'Le code du pays pour la recherche des points relais'
+                                    required:
+                                        - postcode
+                                        - countryCode
+                    responses:
+                        '201':
+                            description: "Liste des points relais disponibles"
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                relayPointNumber:
+                                                    type: string
+                                                    description: "Numéro du point relais"
+                                                adress:
+                                                    type: string
+                                                    description: "Adresse du point relais"
+                                                postcode:
+                                                    type: string
+                                                    description: "Code postal du point relais"
+                                                city:
+                                                    type: string
+                                                    description: "Ville du point relais"
+                                                country:
+                                                    type: string
+                                                    description: "Pays du point relais"
+                        '400':
+                            description: "Erreur de requête (données manquantes ou invalides)"
+                        '500':
+                            description: "Erreur serveur"
