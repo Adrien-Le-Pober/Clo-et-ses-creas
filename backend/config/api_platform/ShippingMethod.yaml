@@ -19,9 +19,14 @@ resources:
                                         countryCode:
                                             type: string
                                             description: 'Le code du pays pour la recherche des points relais'
-                                    required:
-                                        - postcode
-                                        - countryCode
+                                        latitude:
+                                            type: number
+                                            format: float
+                                            description: 'Latitude du client'
+                                        longitude:
+                                            type: number
+                                            format: float
+                                            description: 'Longitude du client'
                     responses:
                         '201':
                             description: "Liste des points relais disponibles"
@@ -35,7 +40,7 @@ resources:
                                                 relayPointNumber:
                                                     type: string
                                                     description: "Numéro du point relais"
-                                                adress:
+                                                address:
                                                     type: string
                                                     description: "Adresse du point relais"
                                                 postcode:
@@ -47,6 +52,18 @@ resources:
                                                 country:
                                                     type: string
                                                     description: "Pays du point relais"
+                                                latitude:
+                                                    type: number
+                                                    format: float
+                                                    description: "Latitude du point relais"
+                                                longitude:
+                                                    type: number
+                                                    format: float
+                                                    description: "Longitude du point relais"
+                                                distance:
+                                                    type: number
+                                                    format: float
+                                                    description: "Distance entre le client et le point relais"
                         '400':
                             description: "Erreur de requête (données manquantes ou invalides)"
                         '500':

@@ -32,24 +32,26 @@ class ShippingMethodController extends AbstractController
         }
 
         $order = $shippingMethod->getOrder();
-
         if (!$order instanceof Order) {
             return new JsonResponse(['error' => 'Type de commande invalide'], 400);
-        }
-
-        $data = json_decode($request->getContent(), true);
-        if (!$data || !isset($data['postcode'], $data['countryCode'])) {
-            return new JsonResponse(['error' => 'Code postal et pays requis'], 400);
         }
 
         $postalCode = $data['postcode'] ?? $order->getShippingAddress()->getPostcode();
         $countryCode = $data['countryCode'] ?? $order->getShippingAddress()->getCountryCode();
         $orderWeight = (string)$order->getWeightTotal();
+        $latitude = $data['latitude'] ?? null;
+        $longitude = $data['longitude'] ?? null;
 
         if (!$postalCode) return new JsonResponse(['error' => 'Code postal requis'], 400);
 
         $relayPoints = match($shippingMethod->getMethod()->getCode()) {
-            'mondial_relay' => $this->mondialRelayShipment->getRelayPoints($postalCode, $countryCode, $orderWeight),
+            'mondial_relay' => $this->mondialRelayShipment->getRelayPoints(
+                $postalCode,
+                $countryCode,
+                $orderWeight,
+                $latitude,
+                $longitude
+            ),
         };
 
         return new JsonResponse($relayPoints);

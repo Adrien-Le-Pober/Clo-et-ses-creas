@@ -19,21 +19,34 @@ class MondialRelayShipment
         $this->privateKey = getenv("MONDIAL_RELAY_PRIVATE_KEY");
     }
 
-    public function getRelayPoints(string $postalCode, string $countryCode, string $orderWeight): array
-    {
+    public function getRelayPoints(
+        string $postalCode,
+        string $countryCode,
+        string $orderWeight,
+        ?string $latitude = null,
+        ?string $longitude = null,
+    ): array {
         $xml = '<?xml version="1.0" encoding="utf-8"?>' .
             '<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">' .
                 '<soap12:Body>' .
-                    '<WSI2_RecherchePointRelais xmlns="http://www.mondialrelay.fr/webservice/">' .
+                    '<WSI2_RecherchePointRelaisAvancee xmlns="http://www.mondialrelay.fr/webservice/">' .
                         '<Enseigne>' . $this->merchantId . '</Enseigne>' .
-                        '<Pays>' . $countryCode . '</Pays>' .
-                        '<CP>' . $postalCode . '</CP>' .
-                        '<Poids>' . $orderWeight . '</Poids>' .
-                        '<Action>Recherche</Action>' .
-                        '<Security>' . $this->privateKey . '</Security>' .
-                    '</WSI2_RecherchePointRelais>' .
-                '</soap12:Body>' .
-            '</soap12:Envelope>';
+                        '<Pays>' . $countryCode . '</Pays>';
+
+        if ($latitude && $longitude) {
+            $xml .= '<Latitude>' . $latitude . '</Latitude>' .
+                    '<Longitude>' . $longitude . '</Longitude>' .
+                    '<RayonRecherche></RayonRecherche>';
+        } else {
+            $xml .= '<CP>' . $postalCode . '</CP>';
+        }
+    
+        $xml .= '<Poids>' . $orderWeight . '</Poids>' .
+                '<Action>Recherche</Action>' .
+                '<Security>' . $this->privateKey . '</Security>' .
+            '</WSI2_RecherchePointRelaisAvancee>' .
+            '</soap12:Body>' .
+        '</soap12:Envelope>';
 
         try {
             $response = $this->httpClient->request('POST', $this->apiUrl, [
@@ -43,9 +56,7 @@ class MondialRelayShipment
                 'body' => $xml
             ]);
 
-            $responseContent = $response->getContent();
-
-            return $this->parseSoapResponse($responseContent);
+            return $this->parseSoapResponse($response->getContent());
         } catch (\Exception $e) {
             return ['error' => 'Failed to fetch relay points', 'details' => $e->getMessage()];
         }
@@ -57,7 +68,7 @@ class MondialRelayShipment
         
         $relayPoints = [];
         
-        foreach ($xml->xpath('//PR*') as $point) {
+        foreach ($xml->xpath('//ret_WSI2_sub_PointRelaisAvancee') as $point) {
             $adresse = (string) $point->LgAdr1;
             if ((string) $point->LgAdr2) $adresse .= ' ' . (string) $point->LgAdr2;
             if ((string) $point->LgAdr3) $adresse .= ' ' . (string) $point->LgAdr3;
@@ -65,10 +76,13 @@ class MondialRelayShipment
 
             $relayPoints[] = [
                 'relayPointNumber' => (string) $point->Num,
-                'adress' => $adresse,
+                'address' => $adresse,
                 'postcode' => (string) $point->CP,
                 'city' => (string) $point->Ville,
                 'country' => (string) $point->Pays,
+                'latitude' => (float) $point->Latitude,
+                'longitude' => (float) $point->Longitude,
+                'distance' => (float) $point->Distance,
             ];
         }
 
