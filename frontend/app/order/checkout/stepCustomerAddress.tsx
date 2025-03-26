@@ -1,5 +1,5 @@
 import Button from "~/components/button";
-import type { StepProps } from "./interface/stepProps";
+import type { StepProps } from "./interfaces/stepProps";
 import Input from "~/components/input";
 import { useForm } from "react-hook-form";
 import { customerAddressSchema } from "./formSchema/customerAddressSchema";

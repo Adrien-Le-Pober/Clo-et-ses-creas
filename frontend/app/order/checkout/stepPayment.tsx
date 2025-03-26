@@ -1,5 +1,5 @@
 import Button from "~/components/button";
-import type { StepProps } from "./interface/stepProps";
+import type { StepProps } from "./interfaces/stepProps";
 
 export default function StepPayment({ onNext }: StepProps) {
     return (
