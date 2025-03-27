@@ -3,8 +3,9 @@ resources:
         operations:
             ApiPlatform\Metadata\Post:
                 name: shop_shipping_method_get_relay_points
-                uriTemplate: '/shop/shipping-methods/{code}/relay-points'
+                uriTemplate: '/shop/shipping-methods/{code}/orders/{orderTokenValue}/relay-points'
                 controller: App\Controller\ShippingMethodController::getRelayPoints
+                input: false
                 openapi:
                     requestBody:
                         required: true

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\Shipment\MondialRelayShipment;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Core\Repository\ShippingMethodRepositoryInterface;
 
@@ -15,11 +16,12 @@ class ShippingMethodController extends AbstractController
 {
     public function __construct(
         private ShippingMethodRepositoryInterface $shippingMethodRepository,
+        private OrderRepositoryInterface $orderRepository,
         private MondialRelayShipment $mondialRelayShipment
     ) {}
 
-    #[Route('/{code}/relay-points', name: 'get_relay_points', methods: ['POST'])]
-    public function getRelayPoints(string $code, Request $request): JsonResponse
+    #[Route('/{code}/orders/{orderTokenValue}/relay-points', name: 'get_relay_points', methods: ['POST'])]
+    public function getRelayPoints(string $code, string $orderTokenValue, Request $request): JsonResponse
     {
         $shippingMethodCodes = [
             'mondial_relay',
@@ -27,14 +29,16 @@ class ShippingMethodController extends AbstractController
 
         $shippingMethod = $this->shippingMethodRepository->findOneBy(['code' => $code]);
 
-        if (!in_array($shippingMethod->getMethod()->getCode(), $shippingMethodCodes)) {
+        if (!in_array($shippingMethod->getCode(), $shippingMethodCodes)) {
             return new JsonResponse(['error' => 'Mode de livraison invalide'], 400);
         }
 
-        $order = $shippingMethod->getOrder();
+        $order = $this->orderRepository->findCartByTokenValue($orderTokenValue);
         if (!$order instanceof Order) {
             return new JsonResponse(['error' => 'Type de commande invalide'], 400);
         }
+
+        $data = json_decode($request->getContent(), true);
 
         $postalCode = $data['postcode'] ?? $order->getShippingAddress()->getPostcode();
         $countryCode = $data['countryCode'] ?? $order->getShippingAddress()->getCountryCode();
@@ -44,7 +48,7 @@ class ShippingMethodController extends AbstractController
 
         if (!$postalCode) return new JsonResponse(['error' => 'Code postal requis'], 400);
 
-        $relayPoints = match($shippingMethod->getMethod()->getCode()) {
+        $relayPoints = match($shippingMethod->getCode()) {
             'mondial_relay' => $this->mondialRelayShipment->getRelayPoints(
                 $postalCode,
                 $countryCode,
