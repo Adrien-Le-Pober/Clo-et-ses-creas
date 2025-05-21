@@ -12,16 +12,16 @@ use Sylius\Component\Core\Model\Order as BaseOrder;
 #[ORM\Table(name: 'sylius_order')]
 class Order extends BaseOrder
 {
-    #[ORM\Column(type: 'float', nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(["sylius:shop:cart:show", "sylius:shop:cart:update"])]
-    private ?float $weightTotal = 0;
+    private ?int $weightTotal = 0;
 
-    public function getWeightTotal(): ?float
+    public function getWeightTotal(): ?int
     {
         return $this->weightTotal;
     }
 
-    public function setWeightTotal(?float $weightTotal): void
+    public function setWeightTotal(?int $weightTotal): void
     {
         $this->weightTotal = $weightTotal;
     }
