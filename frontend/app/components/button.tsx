@@ -26,11 +26,12 @@ export default function Button({
             'border border-primary hover:bg-primary hover:text-secondary'
             : 
             'bg-primary text-secondary'
-        }`;
+        }
+        ${disabled && 'opacity-70'}`;
 
     return (
         <button className={buttonClass} disabled={disabled} onClick={onClick}>
-            {text}
+            {disabled ? "Chargement..." : text}
         </button>
     );
 }
