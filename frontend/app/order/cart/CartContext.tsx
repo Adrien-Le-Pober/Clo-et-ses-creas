@@ -28,10 +28,11 @@ type CartAction =
 const CartContext = createContext<{
     state: CartState;
     dispatch: React.Dispatch<CartAction>;
+    getCart: () => Promise<any | null>;
     addItem: (productVariantCode: string, quantity?: number) => Promise<void>;
     removeItem: (itemCode: string) => Promise<void>;
     updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
-    updateCart: (updateData: Partial<{ email: string, billingAddress: object, shippingAddress: object, couponCode: string }>) => Promise<void>;
+    updateCart: (updateData: Partial<{email: string, billingAddress: object, shippingAddress: object, couponCode: string}>) => Promise<void>;
 } | undefined>(undefined);
 
 const apiURI = import.meta.env.VITE_API_URI;
@@ -122,6 +123,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         fetchCart();
     }, []);
 
+    const getCart = async () => {
+        if (!state.cartToken) return null;
+        try {
+            const { data } = await axios.get(`${apiURI}shop/orders/${state.cartToken}`);
+            return data;
+        } catch (error) {
+            dispatch({ type: "SET_ERROR", payload: "Impossible de récupérer le panier." });
+            return null;
+        }
+    };
+
     const addItem = async (productVariantCode: string, quantity: number = 1) => {
         try {
             let cartToken = state.cartToken;
@@ -194,7 +206,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const updateCart = async (updateData: Partial<{ email: string, billingAddress: object, shippingAddress: object, couponCode: string }>) => {
+    const updateCart = async (updateData: Partial<{ 
+        email: string,
+        billingAddress: object,
+        shippingAddress: object,
+        couponCode: string
+    }>) => {
         try {
             if (!state.cartToken) return;
     
@@ -218,7 +235,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     
 
     return (
-        <CartContext.Provider value={{ state, dispatch, addItem, removeItem, updateItemQuantity, updateCart }}>
+        <CartContext.Provider value={{ state, dispatch, getCart, addItem, removeItem, updateItemQuantity, updateCart }}>
             {children}
         </CartContext.Provider>
     );
