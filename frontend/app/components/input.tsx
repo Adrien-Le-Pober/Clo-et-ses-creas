@@ -20,7 +20,7 @@ export default function Input({
     errorMsg,
     register,
 }: InputProps) {
-    const inputClass=`border rounded-lg px-2 ${width} ${customClasses}`
+    const inputClass=`border rounded-lg px-2 focus:outline-primary ${width} ${customClasses}`
 
     return (
         <>
