@@ -72,6 +72,16 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
                 postcode: data.postcode,
                 phoneNumber: data.phoneNumber,
             },
+            shippingAddress : {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                countryCode: data.countryCode,
+                street: data.street,
+                addressAdditional: data.addressAdditional,
+                city: data.city,
+                postcode: data.postcode,
+                phoneNumber: data.phoneNumber,
+            }
         });
         setIsSubmit(false);
         onNext();
