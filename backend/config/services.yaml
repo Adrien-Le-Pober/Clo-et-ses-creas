@@ -32,3 +32,30 @@ services:
     App\MessageHandler\SendResetPasswordEmailHandler:
         arguments:
             $shopUserRepository: '@sylius.repository.shop_user'
+
+    app.form.type.mondial_relay_shipping_gateway:
+        class: App\Form\Type\MondialRelayShippingGatewayType
+        tags:
+            - { name: bitbag.shipping_gateway_configuration_type, type: "mondial_relay_shipping_gateway", label: "Mondial Relay" }
+
+    app.event_listener.mondial_relay_shipping_export:
+        class: App\EventListener\MondialRelayShippingExportEventListener
+        arguments:
+            - '@request_stack'
+            - '@filesystem'
+            - '@bitbag.manager.shipping_export'
+            - '@http_client'
+            - '%bitbag.shipping_labels_path%'
+            - '%env(MONDIAL_RELAY_MERCHANT_ID)%'
+            - '%env(MONDIAL_RELAY_PRIVATE_KEY)%'
+            - '%env(MONDIAL_RELAY_API_URL)%'
+        tags:
+            - { name: kernel.event_listener, event: 'bitbag.shipping_export.export_shipment', method: exportShipment }
+
+    App\Shipping\Calculator\MondialRelayByWeightCalculator:
+        tags:
+            - { name: sylius.shipping_calculator, calculator: mondial_relay_by_weight, label: "Mondial Relay par poids" }
+
+    App\EventListener\AdminMenuListener:
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addShippingExportMenuItem }
