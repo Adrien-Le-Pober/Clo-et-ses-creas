@@ -1,13 +1,110 @@
-import Button from "~/components/button";
 import type { StepProps } from "./interfaces/stepProps";
+import { useCart } from "../cart/CartContext";
+import { useEffect, useState } from "react";
+import Loader from "~/components/loader";
+import OverviewMobile from "./overview/overviewMobile";
+import OverviewDesktop from "./overview/overviewDesktop";
+import { Link } from "react-router";
 
 export default function StepOverview({ onNext }: StepProps) {
+    const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 1024 : false);
+    const { state, removeItem, updateItemQuantity, getCart } = useCart();
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [itemsTotalPrice, setItemsTotalPrice] = useState(0);
+    const [taxTotal, setTaxTotal] = useState(0);
+    const [shippingTotal, setShippingTotal] = useState(0);
+
+    useEffect(() => {
+        if (!state.cartToken) return;
+        fetchCartPrices();
+    }, [state.cartToken]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            typeof window !== "undefined" && setIsMobile(window.innerWidth < 1024);
+        };
+
+        typeof window !== "undefined" && window.addEventListener("resize", handleResize);
+
+        return () => {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("resize", handleResize);
+            }
+        };
+    }, []);
+
+    const handleIncrement = async (itemId: string, quantity: number) => {
+        const newQuantity = quantity + 1;
+        await updateItemQuantity(itemId, newQuantity);
+        await fetchCartPrices(); // Refresh totals
+    };
+
+    const handleDecrement = async (itemId: string, quantity: number) => {
+        if (quantity > 1) {
+            const newQuantity = quantity - 1;
+            await updateItemQuantity(itemId, newQuantity);
+            await fetchCartPrices(); // Refresh totals
+        }
+    };
+
+    const handleRemove = async (itemId: string) => {
+        await removeItem(itemId);
+        await fetchCartPrices(); // Refresh totals
+    };
+
+    const fetchCartPrices = async () => {
+        const cart = await getCart();
+        setTotalPrice(cart.total);
+        setItemsTotalPrice(cart.itemsTotal);
+        setTaxTotal(cart.taxTotal);
+        setShippingTotal(cart.shippingTotal);
+    };
+
+    const handleSubmit = () => {
+        onNext();
+    }
+
+    if (state.loading) return <Loader/>;
+
     return (
-        <div className="p-4">
-            <h2 className="text-2xl mb-4">Récapitulatif</h2>
-            <form onSubmit={(e) => { e.preventDefault(); onNext(); }}>
-                <Button text="Suivant" customClasses="py-2 px-4"/>
-            </form>
-        </div>
-    );
+        <>
+            <h1 className="text-center text-3xl lg:text-4xl mt-16 mb-14">Récapitulatif du panier</h1>
+            {state.items.length > 0 ? (
+                <section>
+                    {isMobile ? (
+                        <OverviewMobile
+                            items={state.items}
+                            totalPrice={totalPrice}
+                            itemsTotalPrice={itemsTotalPrice}
+                            shippingTotal={shippingTotal}
+                            taxTotal={taxTotal}
+                            removeItem={handleRemove}
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                            handleSubmit={handleSubmit}
+                        />
+                    ) : (
+                        <OverviewDesktop 
+                            items={state.items}
+                            totalPrice={totalPrice}
+                            itemsTotalPrice={itemsTotalPrice}
+                            shippingTotal={shippingTotal}
+                            taxTotal={taxTotal}
+                            removeItem={handleRemove}
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                            handleSubmit={handleSubmit}
+                        />
+                    )}
+                </section>
+            ) : (
+                <div className="flex flex-col items-center gap-5">
+                    <p className="text-center text-xl">Le panier est vide</p>
+                    <Link to="/" className="bg-primary text-secondary py-2 text-xl rounded-lg px-3">
+                        Retourner vers l'accueil
+                    </Link>
+                </div>
+            )}
+        </>
+    )
 };
