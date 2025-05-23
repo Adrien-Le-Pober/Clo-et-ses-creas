@@ -84,7 +84,7 @@ export default function StepCustomerAddress({ onNext }: StepProps) {
             }
         });
         setIsSubmit(false);
-        onNext();
+        if (onNext) onNext();
     };
 
     if (isLoading) return <Loader/>;

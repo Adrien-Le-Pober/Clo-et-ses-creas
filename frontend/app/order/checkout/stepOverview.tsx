@@ -61,7 +61,7 @@ export default function StepOverview({ onNext }: StepProps) {
     };
 
     const handleSubmit = () => {
-        onNext();
+        if (onNext) onNext();
     }
 
     if (state.loading) return <Loader/>;

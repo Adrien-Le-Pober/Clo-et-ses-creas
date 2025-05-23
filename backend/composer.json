@@ -28,6 +28,7 @@
         "bitbag/shipping-export-plugin": "^4.0",
         "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.5",
+        "stripe/stripe-php": "^17.2",
         "sylius/mailer-bundle": "*",
         "sylius/sylius": "~2.0.0",
         "symfony/dotenv": "^6.4 || ^7.1",

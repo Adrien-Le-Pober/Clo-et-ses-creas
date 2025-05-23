@@ -1,5 +1,6 @@
 interface Button {
     text: string;
+    type?: "submit" | "reset" | "button" | undefined;
     disabled?: boolean;
     width?: string;
     height?: string;
@@ -12,6 +13,7 @@ interface Button {
 
 export default function Button({ 
     text,
+    type,
     disabled = false,
     width = 'max-w-80',
     height = 'h-12',
@@ -30,7 +32,7 @@ export default function Button({
         ${disabled && 'opacity-70'}`;
 
     return (
-        <button className={buttonClass} disabled={disabled} onClick={onClick}>
+        <button className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
             {disabled ? "Chargement..." : text}
         </button>
     );

@@ -116,7 +116,7 @@ export default function StepShipment({ onNext }: StepProps) {
             );
 
             setIsSubmitting(false);
-            onNext();
+            if (onNext) onNext();
         } catch (err) {
             setError("Impossible de mettre à jour l'adresse de livraison.");
             setIsSubmitting(false);
