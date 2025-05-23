@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CartMobile from "./cartMobile";
 import CartDesktop from "./cartDesktop";
 import { useCart } from "./CartContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Loader from "~/components/loader";
 
 export default function CartPage() {
@@ -70,7 +70,12 @@ export default function CartPage() {
                     )}
                 </section>
             ) : (
-                <p className="text-center text-xl">Le panier est vide</p>
+                <div className="flex flex-col items-center gap-5">
+                    <p className="text-center text-xl">Le panier est vide</p>
+                    <Link to="/" className="bg-primary text-secondary py-2 text-xl rounded-lg px-3">
+                        Retourner vers l'accueil
+                    </Link>
+                </div>
             )}
         </>
     )
