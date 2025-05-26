@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -12,7 +11,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -51,7 +49,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.error("Erreur lors de la déconnexion", err);
         }
         setIsAuthenticated(false);
-        navigate("/connexion");
+        window.location.href = "/connexion";
     };
 
     return (
