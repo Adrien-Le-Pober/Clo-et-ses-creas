@@ -1,4 +1,5 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useEffect, useRef, useState } from 'react';
 
 interface SelectButtonProps {
     label: string;
@@ -7,6 +8,9 @@ interface SelectButtonProps {
     width?: string; 
     height?: string; 
     fontSize?: string;
+    customWrapperClasses?: string;
+    customButtonClasses?: string;
+    customOptionClasses?: string;
     outlined?: boolean;
     onChange?: (value: string) => void;
 }
@@ -17,40 +21,65 @@ export default function SelectButton({
     width = 'max-w-80',
     height = 'h-12',
     fontSize = 'text-xl',
+    customWrapperClasses,
+    customButtonClasses,
+    customOptionClasses,
     outlined = false,
     onChange,
 }: SelectButtonProps) {
-    const buttonClass = `rounded-[10px] ${width} ${height} ${fontSize} appearance-none text-xl text-center
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedLabel, setSelectedLabel] = useState(label);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    const boxClass = `relative inline ${width} ${customWrapperClasses}`;
+
+    const buttonClass = `rounded-[10px] ${width} ${height} ${fontSize} ${customButtonClasses} px-4 flex items-center justify-between cursor-pointer
         ${outlined ?
             'bg-secondary border border-primary'
             : 
             'bg-primary text-secondary'
         }`;
 
-    const boxClass = `relative inline ${width}`
+    const optionWrapperClass = `absolute top-full left-0 border w-full bg-white shadow-lg z-10 mt-1 rounded-[10px] overflow-hidden`;
+
+    const optionClass = `cursor-pointer px-4 py-2 bg-white hover:bg-primary hover:text-white transition ${customOptionClasses}`;
+
+    // Ferme le menu si clic en dehors
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
-        <div className={boxClass}>
-            {/* Faux bouton qui affiche toujours le label */}
-            <div className={buttonClass + " flex items-center justify-between px-4 cursor-pointer"}>
-                {label}
+        <div className={boxClass} ref={wrapperRef}>
+            <div className={buttonClass} onClick={() => setIsOpen(!isOpen)}>
+                {selectedLabel}
                 <KeyboardArrowDownIcon className="text-primary h-[24px] w-[24px]" />
             </div>
 
-            {/* Sélecteur caché qui gère la valeur */}
-            <select
-                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                onChange={(e) => {
-                    onChange?.(e.target.value);
-                    e.target.value = "";
-                }}
-            >
-                {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
+            {isOpen && (
+                <ul className={optionWrapperClass}>
+                    {options.map((option) => (
+                        <li
+                            key={option.value}
+                            onClick={() => {
+                                onChange?.(option.value);
+                                setSelectedLabel(option.label);
+                                setIsOpen(false);
+                            }}
+                            className={optionClass}
+                        >
+                            {option.label}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
