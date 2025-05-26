@@ -22,6 +22,7 @@ type CartAction =
     | { type: "ADD_ITEM"; payload: CartItem }
     | { type: "REMOVE_ITEM"; payload: string }
     | { type: "UPDATE_ITEM"; payload: { id: string; quantity: number, subtotal: number } }
+    | { type: "RESET_CART"; }
     | { type: "SET_LOADING"; payload: boolean }
     | { type: "SET_ERROR"; payload: string | null };
 
@@ -33,6 +34,7 @@ const CartContext = createContext<{
     removeItem: (itemCode: string) => Promise<void>;
     updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
     updateCart: (updateData: Partial<{email: string, billingAddress: object, shippingAddress: object, couponCode: string}>) => Promise<void>;
+    resetCart: () => Promise<any | null>;
 } | undefined>(undefined);
 
 const apiURI = import.meta.env.VITE_API_URI;
@@ -70,6 +72,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
                         : item
                 ),
             };
+
+        case "RESET_CART":
+            if (typeof window !== "undefined") {
+                localStorage.removeItem("cartToken");
+            }
+            return { ...initialState, cartToken: null, items: [], loading: false, error: null };
 
         case "SET_LOADING":
             return { ...state, loading: action.payload };
@@ -232,10 +240,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             dispatch({ type: "SET_ERROR", payload: "Erreur lors de la mise à jour du panier." });
         }
     };
+
+    const resetCart = async () => {
+        try {
+            dispatch({ type: "SET_LOADING", payload: true });
+                const { data } = await axios.post(`${apiURI}shop/orders`, {}, {
+                headers: { "Content-Type": "application/ld+json" },
+            });
+            const newCartToken = data.tokenValue;
+            dispatch({ type: "RESET_CART" });
+            dispatch({ type: "SET_CART_TOKEN", payload: newCartToken });
+        } catch (error) {
+            dispatch({ type: "SET_ERROR", payload: "Impossible de créer un nouveau panier." });
+        } finally {
+            dispatch({ type: "SET_LOADING", payload: false });
+        }
+    };
     
 
     return (
-        <CartContext.Provider value={{ state, dispatch, getCart, addItem, removeItem, updateItemQuantity, updateCart }}>
+        <CartContext.Provider value={{ state, dispatch, getCart, addItem, removeItem, updateItemQuantity, updateCart, resetCart }}>
             {children}
         </CartContext.Provider>
     );

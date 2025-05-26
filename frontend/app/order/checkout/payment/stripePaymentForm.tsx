@@ -5,46 +5,90 @@ import {
     CardExpiryElement,
     CardCvcElement,
 } from '@stripe/react-stripe-js';
+import axios from 'axios';
 import { useState } from 'react';
 import Button from '~/components/button';
+import { useCart } from '~/order/cart/CartContext';
 
 type Props = {
     clientSecret: string|undefined;
     next: (() => void) |undefined;
     setIsSuccess?: (value: boolean) => void;
+    selectedPaymentMethod?: string;
 };
 
-export const StripePaymentForm = ({ clientSecret, next, setIsSuccess }: Props) => {
+export const StripePaymentForm = ({ clientSecret, next, setIsSuccess, selectedPaymentMethod }: Props) => {
     const stripe = useStripe();
     const elements = useElements();
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { getCart, state, resetCart } = useCart();
 
     const handleSubmit = async (e: React.FormEvent) => {
+        resetCart();
         e.preventDefault();
-        if (!stripe || !elements || !clientSecret) return;
+        if (!stripe || !elements || !clientSecret || !selectedPaymentMethod) return;
 
         setIsProcessing(true);
         setError(null);
 
-        const cardElement = elements.getElement(CardNumberElement);
-        if (!cardElement) {
-            setError("Le champ de carte est introuvable.");
-            setIsProcessing(false);
-            return;
-        }
+        try {
+            const cart = await getCart();
+            const payment = cart?.payments?.[0];
 
-        const result = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: cardElement,
+            if (!payment?.id) {
+                throw new Error("Aucun paiement associé à cette commande.");
+            }
+
+            await axios.patch(`${import.meta.env.VITE_API_URI}shop/orders/${state.cartToken}/payments/${payment.id}`,
+            {
+                paymentMethod: `${import.meta.env.VITE_API_URI}shop/payment-methods/${selectedPaymentMethod}`
             },
-        });
+            {
+                headers: {
+                    "Content-Type": "application/merge-patch+json",
+                },
+            }
+            );
 
-        if (result.error) {
-            setError(result.error.message || 'Erreur lors du paiement.');
-        } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-            if (setIsSuccess) setIsSuccess(true);
-            if (next) next();
+            // Paiement Stripe
+            const cardElement = elements.getElement(CardNumberElement);
+            if (!cardElement) {
+                throw new Error("Le champ de carte est introuvable.");
+            }
+
+            const result = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                },
+            });
+
+            if (result.error) {
+                setError(result.error.message || 'Erreur lors du paiement.');
+            } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+
+                await axios.patch(`${import.meta.env.VITE_API_URI}shop/orders/${state.cartToken}/complete`,
+                    {},
+                    {
+                        headers: {
+                            "Content-Type": "application/merge-patch+json",
+                        },
+                    }
+                );
+
+                await axios.post(`${import.meta.env.VITE_API_URI}mark-payment-completed`, {
+                    paymentId: payment.id,
+                });
+
+                await resetCart();
+
+                setIsSuccess?.(true);
+                next?.();
+            }
+
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || "Une erreur est survenue.");
         }
 
         setIsProcessing(false);
