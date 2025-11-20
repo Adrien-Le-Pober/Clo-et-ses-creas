@@ -38,7 +38,7 @@ export default function MobileCarousel({ images, code }: MobileCarouselProps) {
             >
                 {images.map(img => (
                     <SwiperSlide key={img.id}>
-                        <img src={img.path} className="w-full h-full object-cover" alt={`Produit ${img.id}`} />
+                        <img src={img.path} className="w-full h-full object-cover cursor-pointer" alt={`Produit ${img.id}`} />
                     </SwiperSlide>
                 ))}
             </Swiper>

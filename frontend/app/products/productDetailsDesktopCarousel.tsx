@@ -61,7 +61,7 @@ export default function DesktopCarousel({ images, code }: DesktopCarouselProps) 
                     >
                         {images.map((img, index) => (
                             <SwiperSlide key={img.id}>
-                                <img src={img.path} className="w-full h-full object-cover" alt={`Miniature ${img.id}`} />
+                                <img src={img.path} className="w-full h-full object-cover cursor-pointer" alt={`Miniature ${img.id}`} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
