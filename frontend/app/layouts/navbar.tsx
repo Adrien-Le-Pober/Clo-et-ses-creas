@@ -6,6 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router";
 import { useAuth } from "~/auth/authContext";
+import { useCart } from "~/order/cart/CartContext";
 
 export default function Navbar() {
     const { isAuthenticated, logout } = useAuth();
@@ -15,6 +16,9 @@ export default function Navbar() {
 
     const profileRef = useRef<HTMLDivElement | null>(null);
     const iconRef = useRef<SVGSVGElement | null>(null);
+
+    const { state } = useCart();
+    const cartQuantity = state.items.reduce((total, item) => total + item.quantity, 0);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -70,8 +74,20 @@ export default function Navbar() {
                         <a href="#favorites">
                             <FavoriteBorderOutlinedIcon className="lg:w-9 lg:h-9" />
                         </a>
-                        <Link to="/panier">
+                        <Link to="/panier" className="relative">
                             <ShoppingBagOutlinedIcon className="lg:w-9 lg:h-9"/>
+                            {cartQuantity > 0 && (
+                                <span className="
+                                    absolute -bottom-1 -right-1
+                                    bg-secondary text-primary
+                                    rounded-full
+                                    w-5 h-5
+                                    flex items-center justify-center
+                                    text-xs font-bold
+                                ">
+                                    {cartQuantity}
+                                </span>
+                            )}
                         </Link>
                         <a href="#profile">
                             <PersonIcon
