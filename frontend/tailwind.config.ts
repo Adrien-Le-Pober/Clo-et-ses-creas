@@ -7,6 +7,7 @@ export default {
       primary: '#852525',
       secondary: '#FFF7ED',
       white: '#fff',
+      black: '#000',
     },
     extend: {
       fontFamily: {

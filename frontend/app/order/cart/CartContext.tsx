@@ -14,12 +14,14 @@ interface CartState {
     items: CartItem[];
     loading: boolean;
     error: string | null;
+    lastAddedItem: CartItem | null;
 }
 
 type CartAction =
     | { type: "SET_CART_TOKEN"; payload: string }
     | { type: "SET_ITEMS"; payload: CartItem[] }
     | { type: "ADD_ITEM"; payload: CartItem }
+    | { type: "SET_LAST_ADDED_ITEM"; payload: CartItem | null }
     | { type: "REMOVE_ITEM"; payload: string }
     | { type: "UPDATE_ITEM"; payload: { id: string; quantity: number, subtotal: number } }
     | { type: "RESET_CART"; }
@@ -44,6 +46,7 @@ const initialState: CartState = {
     items: [],
     loading: false,
     error: null,
+    lastAddedItem: null,
 };
 
 function cartReducer(state: CartState, action: CartAction): CartState {
@@ -59,6 +62,9 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
         case "ADD_ITEM":
             return { ...state, items: [...state.items, action.payload] };
+
+        case "SET_LAST_ADDED_ITEM":
+            return { ...state, lastAddedItem: action.payload };
 
         case "REMOVE_ITEM":
             return { ...state, items: state.items.filter((item) => item.id !== action.payload) };
@@ -153,6 +159,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             });
     
             dispatch({ type: "SET_ITEMS", payload: data.items || [] });
+
+            const added = data.items[data.items.length - 1];
+            dispatch({ type: "SET_LAST_ADDED_ITEM", payload: added });
         } catch (error: any) {
             const errorMessage = error.response?.data?.description || "";
             
