@@ -145,6 +145,7 @@ export default function StepShipment({ onNext }: StepProps) {
                         <MondialRelayMap
                             relayPoints={relayPointList}
                             selectedPoint={selectedPoint}
+                            onSelect={setSelectedPoint}
                         />
                     </div>
                     

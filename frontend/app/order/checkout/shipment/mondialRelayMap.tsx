@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
     relayPoints: RelayPoint[];
     selectedPoint: RelayPoint | null;
+    onSelect: (point: RelayPoint) => void;
 }
 
-export default function MondialRelayMap({ relayPoints, selectedPoint }: Props) {
+export default function MondialRelayMap({ relayPoints, selectedPoint, onSelect }: Props) {
     const [LeafletMap, setLeafletMap] = useState<any>(null);
     const [redIcon, setRedIcon] = useState<any>(null);
     const markerRefs = useRef<Record<string, any>>({});
@@ -82,6 +83,9 @@ export default function MondialRelayMap({ relayPoints, selectedPoint }: Props) {
                     icon={redIcon}
                     ref={(ref: any) => {
                         if (ref) markerRefs.current[point.relayPointNumber] = ref;
+                    }}
+                    eventHandlers={{
+                        click: () => onSelect(point),
                     }}
                 >
                     <Popup>
