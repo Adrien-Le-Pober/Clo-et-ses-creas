@@ -11,7 +11,7 @@ import Loader from "~/components/loader";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-export default function StepPayment({ onNext, setIsSuccess }: StepProps) {
+export default function StepPayment({ onNext, setIsSuccess, setIsStepLoading }: StepProps) {
     const [clientSecret, setClientSecret] = useState<string | undefined>(undefined);
     const [paymentMethodList, setPaymentMethodList] = useState<any[]>([]);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
@@ -34,6 +34,10 @@ export default function StepPayment({ onNext, setIsSuccess }: StepProps) {
 
         loadData();
     }, [state.cartToken]);
+
+    useEffect(() => {
+        setIsStepLoading?.(isLoading);
+    }, [isLoading]);
 
     const fetchPaymentMethods = async () => {
         try {

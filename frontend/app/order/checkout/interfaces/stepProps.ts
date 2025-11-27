@@ -3,4 +3,5 @@ export interface StepProps {
     onPrev?: () => void;
     setIsSuccess?: (value: boolean) => void;
     isSuccess?: boolean;
+    setIsStepLoading?: (value: boolean) => void;
 }

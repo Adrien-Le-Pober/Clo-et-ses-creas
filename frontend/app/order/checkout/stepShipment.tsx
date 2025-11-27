@@ -19,7 +19,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import axios from "axios";
 
 
-export default function StepShipment({ onNext }: StepProps) {
+export default function StepShipment({ onNext, setIsStepLoading}: StepProps) {
     const { state, updateCart, getCart } = useCart();
     const [selectedShippingMethod, setSelectedShippingMethod] = useState<string>("mondial_relay");
     const [relayPointList, setRelayPointList] = useState<RelayPoint[]>([]);
@@ -46,6 +46,26 @@ export default function StepShipment({ onNext }: StepProps) {
         };
         fetchRelayPointList();
     }, [selectedShippingMethod, state.cartToken, cityQuery]);
+
+    // stocke le dernier point relais dans le localStorage
+    useEffect(() => {
+        if (selectedPoint) {
+            localStorage.setItem("lastRelayPoint", JSON.stringify(selectedPoint));
+        }
+    }, [selectedPoint]);
+
+    // récupère le dernier point relais dans le localStorage
+    useEffect(() => {
+        const saved = localStorage.getItem("lastRelayPoint");
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            setSelectedPoint(parsed);
+        }
+    }, []);
+
+    useEffect(() => {
+        setIsStepLoading?.(isLoading);
+    }, [isLoading]);
 
     const handleLocateUser = () => {
         if (!navigator.geolocation) {

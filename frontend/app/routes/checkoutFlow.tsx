@@ -17,6 +17,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function CheckoutFlow() {
     const [step, setStep] = useState(0);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isStepLoading, setIsStepLoading] = useState(false);
 
     const nextStep = () => setStep((prev) => prev + 1);
     const prevStep = () => setStep((prev) => (prev > 0 ? prev - 1 : prev));
@@ -25,13 +27,20 @@ export default function CheckoutFlow() {
         <div className="py-4">
             <CheckoutProgress step={step} />
             <div className="mt-4">
-                {step === 0 && <StepCustomerAddress onNext={nextStep} />}
-                {step === 1 && <StepShipment onNext={nextStep} />}
-                {step === 2 && <StepOverview onNext={nextStep} />}
-                {step === 3 && <StepPayment onNext={nextStep} />}
-                {step === 4 && <StepSuccess />}
+                {step === 0 && <StepCustomerAddress onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
+                {step === 1 && <StepShipment onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
+                {step === 2 && <StepOverview onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
+                {step === 3 && <StepPayment onNext={nextStep} setIsSuccess={setIsSuccess} setIsStepLoading={setIsStepLoading}/>}
+                {step === 4 && <StepSuccess isSuccess={isSuccess} setIsStepLoading={setIsStepLoading}/>}
             </div>
-            {step > 0 && <Button text="Précédent" onClick={prevStep} customClasses="mt-4 px-3"/>}
+            {step > 0 && step < 4 && !isStepLoading && (
+                <Button 
+                    text="Précédent"
+                    onClick={prevStep}
+                    width="w-100 md:w-96"
+                    customClasses="m-4 px-3"
+                />
+            )}
         </div>
     );
 };
