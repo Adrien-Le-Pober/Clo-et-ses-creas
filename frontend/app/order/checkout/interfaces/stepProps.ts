@@ -4,4 +4,5 @@ export interface StepProps {
     setIsSuccess?: (value: boolean) => void;
     isSuccess?: boolean;
     setIsStepLoading?: (value: boolean) => void;
+    setNextButton?: (node: React.ReactNode) => void;
 }

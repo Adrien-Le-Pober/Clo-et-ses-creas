@@ -19,7 +19,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import axios from "axios";
 
 
-export default function StepShipment({ onNext, setIsStepLoading}: StepProps) {
+export default function StepShipment({ onNext, setIsStepLoading, setNextButton}: StepProps) {
     const { state, updateCart, getCart } = useCart();
     const [selectedShippingMethod, setSelectedShippingMethod] = useState<string>("mondial_relay");
     const [relayPointList, setRelayPointList] = useState<RelayPoint[]>([]);
@@ -66,6 +66,18 @@ export default function StepShipment({ onNext, setIsStepLoading}: StepProps) {
     useEffect(() => {
         setIsStepLoading?.(isLoading);
     }, [isLoading]);
+
+    useEffect(() => {
+        setNextButton?.(
+            <Button
+                onClick={handleSubmit}
+                text="Suivant"
+                width="w-full md:max-w-56"
+                customClasses="py-2 px-4"
+                disabled={isSubmitting}
+            />
+        );
+    }, [isSubmitting, selectedPoint, selectedShippingMethod]);
 
     const handleLocateUser = () => {
         if (!navigator.geolocation) {
@@ -172,25 +184,7 @@ export default function StepShipment({ onNext, setIsStepLoading}: StepProps) {
                 </div>
                 <div className="xl:flex xl:flex-col xl:justify-between md:w-1/3 w-full order-1 px-3 md:order-2 xl:h-[550px]">
                     <ShippingMethodList onSelect={setSelectedShippingMethod} />
-                    {/* button de soumission desktop */}
-                    <Button 
-                        onClick={handleSubmit}
-                        text="Suivant"
-                        width="w-full"
-                        margin="mt-5"
-                        customClasses="py-2 px-4 hidden md:inline-block"
-                        disabled={isSubmitting}
-                    />
                 </div>
-                {/* button de soumission mobile */}
-                <Button
-                    onClick={handleSubmit}
-                    text="Suivant"
-                    width="w-full"
-                    margin="mt-5"
-                    customClasses="py-2 px-4 md:hidden order-last"
-                    disabled={isSubmitting}
-                />
             </div>
         </div>
     );

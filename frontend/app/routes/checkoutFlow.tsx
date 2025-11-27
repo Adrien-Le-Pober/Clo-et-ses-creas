@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckoutProgress from "~/order/checkout/checkoutProgress";
 import StepCustomerAddress from "~/order/checkout/stepCustomerAddress";
 import StepShipment from "~/order/checkout/stepShipment";
@@ -23,23 +23,43 @@ export default function CheckoutFlow() {
     const nextStep = () => setStep((prev) => prev + 1);
     const prevStep = () => setStep((prev) => (prev > 0 ? prev - 1 : prev));
 
+    const [nextButton, setNextButton] = useState<React.ReactNode>(null);
+
+    useEffect(() => {
+        setNextButton(null); // reset à chaque changement de step
+    }, [step]);
+
     return (
         <div className="py-4">
             <CheckoutProgress step={step} />
             <div className="mt-4">
                 {step === 0 && <StepCustomerAddress onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
-                {step === 1 && <StepShipment onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
+                {step === 1 && <StepShipment onNext={nextStep} setIsStepLoading={setIsStepLoading} setNextButton={setNextButton}/>}
                 {step === 2 && <StepOverview onNext={nextStep} setIsStepLoading={setIsStepLoading}/>}
                 {step === 3 && <StepPayment onNext={nextStep} setIsSuccess={setIsSuccess} setIsStepLoading={setIsStepLoading}/>}
                 {step === 4 && <StepSuccess isSuccess={isSuccess} setIsStepLoading={setIsStepLoading}/>}
             </div>
             {step > 0 && step < 4 && !isStepLoading && (
-                <Button 
-                    text="Précédent"
-                    onClick={prevStep}
-                    width="w-100 md:w-96"
-                    customClasses="m-4 px-3"
-                />
+                <div className="pt-3 md:pt-6 px-4">
+
+                    <div className="flex flex-col-reverse md:flex-row gap-4 md:justify-between">
+
+                        {/* Précédent */}
+                        <Button 
+                            text="Précédent"
+                            onClick={prevStep}
+                            width="w-full md:w-56"
+                            customClasses="px-4"
+                        />
+
+                        {/* Suivant */}
+                        <div className="w-full md:w-56">
+                            {nextButton}
+                        </div>
+
+                    </div>
+
+                </div>
             )}
         </div>
     );
