@@ -6,6 +6,8 @@ import Button from "~/components/button";
 import Input from "~/components/input";
 import { signUpSchema } from "~/auth/signUpSchema";
 import ErrorMessage from "~/components/errorMessage";
+import { useNavigate } from "react-router";
+import { useAuth } from "./authContext";
 
 interface SignUpFormData {
     email: string;
@@ -28,18 +30,34 @@ export default function SignInPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
     const onSubmit = async (signUpForData: SignUpFormData) => {
         setLoading(true);
         setError("");
 
         try {
+            // 1Création du compte
             await axios.post(
                 `${import.meta.env.VITE_API_URI}shop/customers`,
                 signUpForData
             );
 
-            reset();
-            alert("Inscription réussie !");
+            // Connexion automatique juste après inscription
+            await axios.post(
+                `${import.meta.env.VITE_API_URI}shop/customers/token`,
+                {
+                    email: signUpForData.email,
+                    password: signUpForData.password,
+                },
+                { withCredentials: true }
+            );
+
+            // Connexion côté front (récup des infos user)
+            await login();
+
+            navigate("/");
         } catch (err: any) {
             if (err.response) {
                 const { data, status } = err.response;
