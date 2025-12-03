@@ -19,11 +19,11 @@ export default function AddToCartModal() {
 
     return (
         <div 
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer"
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center cursor-pointer z-[9999]"
             onClick={close}
         >
             <div 
-                className="bg-secondary p-6 w-96 space-y-8 relative cursor-default"
+                className="bg-secondary p-6 w-96 space-y-8 relative cursor-default z-[10000]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between">
