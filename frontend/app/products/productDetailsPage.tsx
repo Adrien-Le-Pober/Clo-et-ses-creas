@@ -5,6 +5,7 @@ import Loader from "~/components/loader";
 import DesktopCarousel from "~/products/productDetailsDesktopCarousel";
 import MobileCarousel from "~/products/productDetailsMobileCarousel";
 import ProductItem from "./productItem";
+import { useCart } from "~/order/cart/CartContext";
 
 interface ProductDetails {
     code: string;
@@ -41,6 +42,7 @@ export default function ProductDetailsPage() {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
+    const { addItem } = useCart();
     const [associatedProducts, setAssociatedProducts] = useState<Product[] | null>(null);
 
     const DESCRIPTION_LIMIT = 170;
@@ -184,6 +186,18 @@ export default function ProductDetailsPage() {
                     <p className="text-2xl lg:text-3xl text-[#A9636C] order-2 pb-10 lg:pb-12 lg:order-3">{productDetails?.price}</p>
                 </section>
             </div>
+
+            {isMobile && (
+                <div className="flex justify-center px-6 pb-10">
+                    <button
+                        onClick={() => productDetails?.code && addItem(productDetails.code)}
+                        className="bg-primary text-white px-10 py-4 rounded-lg text-2xl w-full max-w-[400px] shadow"
+                    >
+                        Ajouter au panier
+                    </button>
+                </div>
+            )}
+
             {associatedProducts && associatedProducts.length > 0 && (
                 <section className="my-12 text-center">
                     <h2 className="text-4xl mb-6">Vous pourriez aussi aimer</h2>
