@@ -107,6 +107,7 @@ export default function Navbar() {
                                 <div className="py-1">
                                     {isAuthenticated ? (
                                         <>
+                                            <Link to="/mon-compte" className="block px-4 py-2">Mon compte</Link>
                                             <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">
                                                 Déconnexion
                                             </button>
