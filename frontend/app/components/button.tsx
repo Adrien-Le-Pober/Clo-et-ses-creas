@@ -1,5 +1,6 @@
 interface Button {
     text: string;
+    textLoading?: string;
     type?: "submit" | "reset" | "button" | undefined;
     disabled?: boolean;
     width?: string;
@@ -13,6 +14,7 @@ interface Button {
 
 export default function Button({ 
     text,
+    textLoading,
     type,
     disabled = false,
     width = 'max-w-80',
@@ -33,7 +35,7 @@ export default function Button({
 
     return (
         <button className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
-            {disabled ? "Chargement..." : text}
+            {disabled && textLoading ? textLoading : text}
         </button>
     );
 }

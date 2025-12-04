@@ -78,7 +78,13 @@ export default function CartDesktop({
                 <div></div>
                 <div className="flex flex-col border-s border-b border-e pt-9 pb-14 px-10">
                     <p>Total : {totalPrice / 100} €</p>
-                    <Button text="Valider" width="w-[calc(100%-80px)] max-w-[500px]" margin="mt-10" customClasses='self-center' onClick={handleSubmit} />
+                    <Button
+                        text="Valider"
+                        width="w-[calc(100%-80px)] max-w-[500px]"
+                        margin="mt-10"
+                        customClasses='self-center'
+                        onClick={handleSubmit}
+                    />
                 </div>
             </div>
         </>

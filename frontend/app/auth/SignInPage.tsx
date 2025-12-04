@@ -131,7 +131,11 @@ export default function SignInPage() {
 
                         {error && <ErrorMessage message={error}/>}
 
-                        <Button text={loading ? "Chargement..." : "Valider"} disabled={loading} />
+                        <Button
+                            text="Valider"
+                            textLoading="Chargement..."
+                            disabled={loading}
+                        />
                     </div>
                 </form>
             </section>

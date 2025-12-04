@@ -69,7 +69,13 @@ export default function CartMobile({
                 text-3xl"
             >
                 <p>Total : {totalPrice / 100} €</p>
-                <Button text="Valider" width="w-full" margin="mt-10" customClasses='self-center' onClick={handleSubmit}/>
+                <Button
+                    text="Valider"
+                    width="w-full"
+                    margin="mt-10"
+                    customClasses='self-center'
+                    onClick={handleSubmit}
+                />
             </div>
         </>
     )

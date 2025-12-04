@@ -51,7 +51,12 @@ export default function ForgotPasswordComponent() {
                     label="Email"
                     register={register("email")} 
                 />
-                <Button text={loading ? "Chargement..." : "Valider"} width="w-full" disabled={loading} />
+                <Button 
+                    text="Valider"
+                    textLoading="Chargement..."
+                    width="w-full"
+                    disabled={loading}
+                />
                 {successMessage && <SuccessMessage message={successMessage} className="mt-3" />}
                 {error && <ErrorMessage message={error} className="mt-3" />}
             </form>

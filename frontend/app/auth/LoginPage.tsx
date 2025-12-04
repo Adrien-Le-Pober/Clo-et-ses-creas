@@ -88,7 +88,12 @@ export default function LoginPage() {
 
                 {error && <ErrorMessage message={error} />}
 
-                <Button text={loading ? "Chargement..." : "Valider"} width="w-full" disabled={loading} />
+                <Button
+                    text="Valider"
+                    textLoading="Chargement..."
+                    width="w-full"
+                    disabled={loading}
+                />
             </form>
         </div>
     );

@@ -102,7 +102,12 @@ export default function ResetPasswordComponent() {
                 />
                 {errors.confirmNewPassword &&  <ErrorMessage message={errors.confirmNewPassword.message || "Une erreur est survenue"} />}
 
-                <Button text={loading ? "Chargement..." : "Valider"} width="w-full" disabled={loading} />
+                <Button
+                    text="Valider"
+                    textLoading="Chargement..."
+                    width="w-full"
+                    disabled={loading}
+                />
                 {successMessage && <SuccessMessage message={successMessage} className="mt-3" />}
                 {error && <ErrorMessage message={error} className="mt-3" />}
             </form>
