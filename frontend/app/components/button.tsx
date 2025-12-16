@@ -34,7 +34,12 @@ export default function Button({
         ${disabled && 'opacity-70'}`;
 
     return (
-        <button className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
+        <button
+            className={buttonClass}
+            disabled={disabled}
+            {...(type !== "submit" ? { onClick } : {})} // onClick seulement si ce n'est pas submit
+            type={type}
+        >
             {disabled && textLoading ? textLoading : text}
         </button>
     );

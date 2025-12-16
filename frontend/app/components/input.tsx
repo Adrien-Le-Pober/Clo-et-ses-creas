@@ -25,7 +25,7 @@ export default function Input({
     const inputClass=`border rounded-lg px-2 focus:outline-primary ${width} ${customClasses}`
 
     return (
-        <div className="flex flex-col pb-7">
+        <div className="flex flex-col pb-7 flex-1">
             <label htmlFor={name} className="pb-3 md:pb-5">{label}</label>
 
             {textarea ? (
