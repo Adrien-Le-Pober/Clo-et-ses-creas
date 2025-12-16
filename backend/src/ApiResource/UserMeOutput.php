@@ -20,6 +20,7 @@ use ApiPlatform\Metadata\ApiResource;
 )]
 class UserMeOutput
 {
+    public ?int $customerId = null;
     public ?string $email = null;
     public ?string $firstName = null;
     public ?string $lastName = null;

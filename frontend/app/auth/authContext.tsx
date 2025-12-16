@@ -10,6 +10,7 @@ const axiosClient = axios.create({
 export default axiosClient;
 
 interface User {
+    customerId: number;
     email: string;
     firstName: string;
     lastName: string;

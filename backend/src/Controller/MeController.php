@@ -20,6 +20,7 @@ class MeController extends AbstractController
         $customer = $user->getCustomer();
 
         $dto = new UserMeOutput();
+        $dto->customerId = $customer->getId();
         $dto->email = $customer->getEmail();
         $dto->firstName = $customer->getFirstName();
         $dto->lastName = $customer->getLastName();
