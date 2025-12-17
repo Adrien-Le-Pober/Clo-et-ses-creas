@@ -9,6 +9,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { Toaster } from "react-hot-toast";
+
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 
@@ -47,6 +49,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Links />
           </head>
           <body>
+
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  color: '#852525',
+                  background: '#FFF7ED',
+                },
+                iconTheme: {
+                  primary: '#852525',
+                  secondary: '#FFF7ED',
+                },
+              }}
+            />
             
             <header>
               <Navbar/>

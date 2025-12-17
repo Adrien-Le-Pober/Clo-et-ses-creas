@@ -2,15 +2,16 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "~/auth/authContext";
 import { useCustomer } from "~/hooks/useCustomer";
+import toast from "react-hot-toast";
 
 import Input from "~/components/input";
 import Button from "~/components/button";
+import SelectInput from "./selectInput";
 import Loader from "~/components/loader";
 import axiosClient from "~/auth/authContext";
 import { useEffect, useState } from "react";
 
 import { customerAddressSchema } from "~/schemas/customerAddressSchema";
-import SelectInput from "./selectInput";
 
 interface PersonalInfoFormData {
   firstName: string;
@@ -76,6 +77,8 @@ export default function AccountPersonalInfoForm({ onSubmitSuccess }: AccountPers
 
     setIsSubmitting(true);
 
+    const toastId = toast.loading("Enregistrement en cours...");
+
     try {
       let addressId = address?.["@id"];
 
@@ -92,7 +95,7 @@ export default function AccountPersonalInfoForm({ onSubmitSuccess }: AccountPers
           phoneNumber: data.phoneNumber,
         };
 
-        await axiosClient.put(addressId, addressPayload, {
+        await axiosClient.put(addressId.replace("/api/v2", ""), addressPayload, {
           headers: { "Content-Type": "application/json" },
         });
       } else {
@@ -131,11 +134,13 @@ export default function AccountPersonalInfoForm({ onSubmitSuccess }: AccountPers
         headers: { "Content-Type": "application/json" },
       });
 
-      alert("Informations mises à jour !");
+      toast.success("Informations mises à jour !", { id: toastId });
+
       onSubmitSuccess?.();
 
     } catch (e) {
       console.error("Erreur update:", e);
+      toast.error("Une erreur est survenue", { id: toastId });
     } finally {
       setIsSubmitting(false);
     }
