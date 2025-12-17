@@ -1,4 +1,6 @@
 import { useState, type ReactNode } from "react";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export default function Accordion({
     title,
@@ -12,19 +14,24 @@ export default function Accordion({
     const [open, setOpen] = useState(defaultOpen);
 
     return (
-        <div className="border-b border-gray-300 py-4">
+        <div className="mb-5">
             <button
                 type="button"
                 onClick={() => setOpen(!open)}
-                className="flex justify-between items-center w-full text-left bg-primary text-secondary h-20 px-5 rounded-[10px]"
+                className={`
+                    flex justify-between items-center w-full text-left bg-primary text-secondary h-20 px-5
+                    ${open ? "rounded-t-[10px]" : "rounded-[10px]"}
+                `}
             >
                 <span className="text-lg font-medium">{title}</span>
-                <span>{open ? "−" : "+"}</span>
+                <span>{open ? <KeyboardArrowUpIcon fontSize="large"/> : <KeyboardArrowDownIcon fontSize="large"/>}</span>
             </button>
 
             <div
                 className={`
                     overflow-hidden transition-[max-height,opacity] duration-300
+                    px-3 pb-5
+                    border border-primary
                     ${open ? "max-h-[9999px] opacity-100" : "max-h-0 opacity-0"}
                 `}
             >
