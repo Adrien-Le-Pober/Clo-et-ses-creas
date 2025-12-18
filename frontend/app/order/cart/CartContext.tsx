@@ -35,7 +35,7 @@ const CartContext = createContext<{
     addItem: (productVariantCode: string, quantity?: number) => Promise<void>;
     removeItem: (itemCode: string) => Promise<void>;
     updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
-    updateCart: (updateData: Partial<{email: string, billingAddress: object, shippingAddress: object, couponCode: string}>) => Promise<void>;
+    updateCart: (updateData: Partial<{email: string, billingAddress: object, shippingAddress: object, couponCode: string, customer?: string}>) => Promise<void>;
     resetCart: () => Promise<any | null>;
 } | undefined>(undefined);
 
@@ -227,7 +227,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         email: string,
         billingAddress: object,
         shippingAddress: object,
-        couponCode: string
+        couponCode: string,
+        customer: string,
     }>) => {
         try {
             if (!state.cartToken) return;
@@ -239,6 +240,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 billingAddress: updateData.billingAddress || data.billingAddress,
                 shippingAddress: updateData.shippingAddress || data.shippingAddress,
                 couponCode: updateData.couponCode || data.couponCode,
+                customer: updateData.customer || data.customer
             };
     
             await axios.put(`${apiURI}shop/orders/${state.cartToken}`, updatedOrder, {

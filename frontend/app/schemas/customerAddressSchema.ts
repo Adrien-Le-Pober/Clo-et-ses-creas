@@ -22,7 +22,7 @@ export const customerAddressSchema = yup.object({
         .max(254, "L'adresse email ne peut pas dépasser 254 caractères."),
     countryCode: yup
         .string()
-        .required("Veuillez saisir votre code postal."),
+        .required("Veuillez choisir un pays."),
     street: yup
         .string()
         .required("Veuillez saisir votre adresse.")

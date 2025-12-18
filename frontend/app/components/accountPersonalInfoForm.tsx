@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "~/auth/authContext";
-import { useCustomer } from "~/hooks/useCustomer";
 import toast from "react-hot-toast";
 
 import Input from "~/components/input";
@@ -26,13 +24,15 @@ interface PersonalInfoFormData {
 }
 
 interface AccountPersonalInfoFormProps {
-  onSubmitSuccess?: () => void;
+  user: any | null;
+  customer: any | null;
+  address: any | null;
+  customerId: number | null;
+  loading?: boolean;
+  onSubmitSuccess?: (data: PersonalInfoFormData) => void;
 }
 
-export default function AccountPersonalInfoForm({ onSubmitSuccess }: AccountPersonalInfoFormProps) {
-  const { user } = useAuth();
-  const { customer, address, loading } = useCustomer(user?.customerId ?? null);
-
+export default function AccountPersonalInfoForm({ user, customer, customerId, address, loading, onSubmitSuccess }: AccountPersonalInfoFormProps) {
   const [countries, setCountries] = useState<{ code: string; name: string }[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,78 +73,98 @@ export default function AccountPersonalInfoForm({ onSubmitSuccess }: AccountPers
   }, [customer, address, setValue]);
 
   const onSubmit = async (data: PersonalInfoFormData) => {
-    if (!customer) return;
-
     setIsSubmitting(true);
-
     const toastId = toast.loading("Enregistrement en cours...");
 
     try {
-      let addressId = address?.["@id"];
+      /**
+       * CAS 1 — Guest
+       * On ne touche PAS à l’API shop/addresses
+       * Le checkout se chargera de l’adresse
+       */
+      if (!user || !customer) {
+        toast.success("Informations enregistrées", { id: toastId });
+        onSubmitSuccess?.(data);
+        return;
+      }
 
-      // Si l'adresse existe, on l'a met à jour, sinon on la crée
+      let addressId: string | undefined = address?.["@id"];
+
+      /**
+       * CAS 2 — Utilisateur connecté
+       * Adresse existante → update
+       * Sinon → création
+       */
       if (addressId) {
-        const addressPayload = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          countryCode: data.countryCode,
-          street: data.street,
-          addressAdditional: data.addressAdditional,
-          city: data.city,
-          postcode: data.postcode,
-          phoneNumber: data.phoneNumber,
-        };
-
-        await axiosClient.put(addressId.replace("/api/v2", ""), addressPayload, {
-          headers: { "Content-Type": "application/json" },
-        });
+        await axiosClient.put(
+          addressId.replace("/api/v2", ""),
+          {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            countryCode: data.countryCode,
+            street: data.street,
+            addressAdditional: data.addressAdditional,
+            city: data.city,
+            postcode: data.postcode,
+            phoneNumber: data.phoneNumber,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
       } else {
-        const addressPayload = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          countryCode: data.countryCode,
-          street: data.street,
-          addressAdditional: data.addressAdditional,
-          city: data.city,
-          postcode: data.postcode,
-          phoneNumber: data.phoneNumber,
-          customer: `/api/v2/shop/customers/${user?.customerId}`,
-        };
-
-        const res = await axiosClient.post("/shop/addresses", addressPayload, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const res = await axiosClient.post(
+          "/shop/addresses",
+          {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            countryCode: data.countryCode,
+            street: data.street,
+            addressAdditional: data.addressAdditional,
+            city: data.city,
+            postcode: data.postcode,
+            phoneNumber: data.phoneNumber,
+            customer: `/api/v2/shop/customers/${customerId}`,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         addressId = res.data["@id"];
       }
 
-      // Mise à jour du customer avec l'adresse par défaut
-      const customerPayload = {
-        defaultAddress: addressId,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        birthday: customer.birthday ?? null,
-        gender: customer.gender ?? "u",
-        phoneNumber: data.phoneNumber,
-        subscribedToNewsletter: customer.subscribedToNewsletter ?? false,
-      };
-
-      await axiosClient.put(`/shop/customers/${user?.customerId}`, customerPayload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      /**
+       * Mise à jour du customer
+       */
+      await axiosClient.put(
+        `/shop/customers/${customerId}`,
+        {
+          defaultAddress: addressId,
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthday: customer.birthday ?? null,
+          gender: customer.gender ?? "u",
+          phoneNumber: data.phoneNumber,
+          subscribedToNewsletter: customer.subscribedToNewsletter ?? false,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       toast.success("Informations mises à jour !", { id: toastId });
+      onSubmitSuccess?.(data);
 
-      onSubmitSuccess?.();
-
-    } catch (e) {
-      console.error("Erreur update:", e);
+    } catch (error) {
+      console.error("Erreur update:", error);
       toast.error("Une erreur est survenue", { id: toastId });
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   if (loading) return <Loader />;
 

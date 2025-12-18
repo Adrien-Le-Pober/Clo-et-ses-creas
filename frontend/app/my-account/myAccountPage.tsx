@@ -1,7 +1,15 @@
 import Accordion from "~/components/accordion";
 import AccountPersonalInfoForm from "~/components/accountPersonalInfoForm";
+import ChangePasswordForm from "./changePasswordForm";
+import { useAuth } from "~/auth/authContext";
+import { useCustomer } from "~/hooks/useCustomer";
 
 export default function MyAccountPage() {
+    const { user } = useAuth();
+    const { customer, address, loading } = useCustomer(user?.customerId ?? null);
+
+    if (!user) return null;
+
     return (
         <div className="flex flex-col items-center px-4">
 
@@ -11,14 +19,20 @@ export default function MyAccountPage() {
 
             <div className="w-full max-w-xl"> 
                 <Accordion title="Informations personnelles" defaultOpen>
-                    <AccountPersonalInfoForm />
+                    <AccountPersonalInfoForm
+                        user={user}
+                        customer={customer}
+                        address={address}
+                        customerId={user.customerId}
+                        loading={loading}
+                    />
                 </Accordion>
 
                 <Accordion title="Modifier mon mot de passe">
-                    "{/* Formulaire à venir */}"
+                    <ChangePasswordForm customerId={user.customerId} />
                 </Accordion>
 
-                "{/* Bouton + modal confirmation */}"
+                "{/* Bouton supprimer mon compte */}"
             </div>
         </div>
     );
