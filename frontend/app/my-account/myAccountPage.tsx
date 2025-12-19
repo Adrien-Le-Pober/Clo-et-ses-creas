@@ -3,6 +3,7 @@ import AccountPersonalInfoForm from "~/components/accountPersonalInfoForm";
 import ChangePasswordForm from "./changePasswordForm";
 import { useAuth } from "~/auth/authContext";
 import { useCustomer } from "~/hooks/useCustomer";
+import DeleteAccountButton from "./deleteAccountButton";
 
 export default function MyAccountPage() {
     const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function MyAccountPage() {
                     <ChangePasswordForm customerId={user.customerId} />
                 </Accordion>
 
-                "{/* Bouton supprimer mon compte */}"
+                <DeleteAccountButton />
             </div>
         </div>
     );
