@@ -1,16 +1,35 @@
 import { useEffect, useState } from "react";
-import axiosClient from "~/auth/authContext";
+import { axiosClient } from "~/core/api/axios";
+
+type CustomerErrorType =
+    | "unauthorized"
+    | "not_found"
+    | "network"
+    | "unknown";
+
+interface CustomerError {
+    type: CustomerErrorType;
+    message: string;
+}
 
 export function useCustomer(customerId: number | null) {
     const [customer, setCustomer] = useState<any>(null);
     const [address, setAddress] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+    const [isCustomerLoading, setIsCustomerLoading] = useState(false);
+    const [customerError, setCustomerError] = useState<CustomerError | null>(null);
 
     useEffect(() => {
-        if (!customerId) return;
+        if (!customerId) {
+            setCustomer(null);
+            setAddress(null);
+            setCustomerError(null);
+            return;
+        }
 
         const fetchCustomer = async () => {
-            setLoading(true);
+            setIsCustomerLoading(true);
+            setCustomerError(null);
+
             try {
                 // Récupérer le customer
                 const { data } = await axiosClient.get(`/shop/customers/${customerId}`);
@@ -24,15 +43,31 @@ export function useCustomer(customerId: number | null) {
                     setAddress(addressRes.data);
                 }
 
-            } catch (e) {
-                console.error("Erreur fetch customer:", e);
+            } catch (e: any) {
+                let error: CustomerError = {
+                    type: "unknown",
+                    message: "Erreur lors du chargement du customer",
+                };
+
+                if (e.response?.status === 401) {
+                    error = { type: "unauthorized", message: "Session expirée" };
+                } else if (e.response?.status === 404) {
+                    error = { type: "not_found", message: "Customer introuvable" };
+                } else if (e.message === "Network Error") {
+                    error = { type: "network", message: "Erreur réseau" };
+                }
+
+                console.error("Erreur fetch customer:", error);
+                setCustomerError(error);
+                setCustomer(null);
+                setAddress(null);
             } finally {
-                setLoading(false);
+                setIsCustomerLoading(false);
             }
         };
 
         fetchCustomer();
     }, [customerId]);
 
-    return { customer, address, loading };
+    return { customer, address, isCustomerLoading, customerError, };
 }

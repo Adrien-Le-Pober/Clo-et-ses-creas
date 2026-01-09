@@ -1,5 +1,3 @@
-import { AuthProvider } from "~/auth/authContext";
-
 import {
   isRouteErrorResponse,
   Links,
@@ -19,8 +17,10 @@ import Footer from "./layouts/footer";
 
 import error_404 from "./../assets/images/error_404.png";
 import error_404_mobile from "./../assets/images/error_404_mobile.png";
-import { CartProvider } from "./order/cart/CartContext";
-import AddToCartModal from "./components/addToCartModal";
+import { CartProvider } from "./features/cart/CartContext";
+import { SessionProvider } from "./core/session/sessionContext";
+
+import AddToCartModal from "~/features/cart/components/addToCartModal";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", type:"image/jpg", href:"../public/favicon.jpg" },
@@ -39,7 +39,7 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
+    <SessionProvider>
       <CartProvider>
         <html lang="fr">
           <head>
@@ -81,7 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </body>
         </html>
       </CartProvider>
-    </AuthProvider>
+    </SessionProvider>
   );
 }
 
