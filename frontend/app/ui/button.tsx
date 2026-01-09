@@ -15,7 +15,7 @@ interface Button {
 export default function Button({ 
     text,
     textLoading,
-    type,
+    type = "button",
     disabled = false,
     width = 'max-w-80',
     height = 'h-12',

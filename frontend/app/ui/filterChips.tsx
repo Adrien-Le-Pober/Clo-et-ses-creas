@@ -15,6 +15,7 @@ export default function FilterChips({ activeFilters, onRemoveFilter }: FilterChi
                     <button 
                         className="ml-2 text-lg" 
                         onClick={() => onRemoveFilter(filter.value)}
+                        type="button"
                     >
                         ✕
                     </button>
