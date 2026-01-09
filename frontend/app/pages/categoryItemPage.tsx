@@ -2,8 +2,8 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import ProductList from "~/products/productList";
-import Loader from "~/components/loader";
+import ProductList from "~/features/products/components/productList";
+import Loader from "~/ui/loader";
 
 export default function CategoryItemPage() {
     const { category } = useParams<{ category: string }>();

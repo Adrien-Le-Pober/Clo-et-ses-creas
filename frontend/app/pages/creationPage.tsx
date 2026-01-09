@@ -1,9 +1,9 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import SelectButton from '~/components/selectButton';
+import SelectButton from '~/ui/selectButton';
 import { useEffect, useState } from 'react';
-import ProductList from '~/products/productList';
+import ProductList from '~/features/products/components/productList';
 import axios from 'axios';
-import FilterChips from '~/components/filterChips';
+import FilterChips from '~/ui/filterChips';
 
 export default function creationPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -89,6 +89,7 @@ export default function creationPage() {
                                 bg-primary text-secondary text-xl rounded-[10px]
                                 h-12 w-[152px] px-4"
                         onClick={() => setIsFilterOpen(prev => !prev)}
+                        type="button"
                     >
                         <span>Filtres</span>
                         <TuneIcon/>

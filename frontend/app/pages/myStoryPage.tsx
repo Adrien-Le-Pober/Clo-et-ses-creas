@@ -5,7 +5,7 @@ export default function MyStoryPage() {
         <>
             <div className="flex justify-center  md:justify-start">
                 <div className="md:w-1/2"></div>
-                <h1 className="pb-28 pt-20 md:pb-24 md:pt-32 text-4xl">Qui suis-je ?</h1>
+                <h1 className="pb-28 pt-20 md:pb-24 md:pt-32 text-4xl">Mon histoire</h1>
             </div>
             <div className="flex flex-col md:flex-row">
                 <section className="w-full px-6 md:px-12 text-3xl pb-16">

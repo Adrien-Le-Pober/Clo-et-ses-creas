@@ -4,10 +4,10 @@ import { useSearchParams } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
-import Button from '../components/button';
-import Input from '../components/input';
-import ErrorMessage from "~/components/errorMessage";
-import SuccessMessage from "~/components/successMessage";
+import Button from '../ui/button';
+import Input from '../ui/input';
+import ErrorMessage from "~/ui/errorMessage";
+import SuccessMessage from "~/ui/successMessage";
 
 interface ResetPasswordFormData {
     newPassword: string;

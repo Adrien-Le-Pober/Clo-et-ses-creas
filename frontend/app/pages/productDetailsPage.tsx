@@ -1,11 +1,11 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Loader from "~/components/loader";
-import DesktopCarousel from "~/products/productDetailsDesktopCarousel";
-import MobileCarousel from "~/products/productDetailsMobileCarousel";
-import ProductItem from "./productItem";
-import { useCart } from "~/order/cart/CartContext";
+import Loader from "~/ui/loader";
+import DesktopCarousel from "~/features/products/components/productDetailsDesktopCarousel";
+import MobileCarousel from "~/features/products/components/productDetailsMobileCarousel";
+import ProductItem from "~/features/products/components/productItem";
+import { useCart } from "~/features/cart/CartContext";
 
 interface ProductDetails {
     code: string;
@@ -192,6 +192,7 @@ export default function ProductDetailsPage() {
                     <button
                         onClick={() => productDetails?.code && addItem(productDetails.code)}
                         className="bg-primary text-white px-10 py-4 rounded-lg text-2xl w-full max-w-[400px] shadow"
+                        type="button"
                     >
                         Ajouter au panier
                     </button>

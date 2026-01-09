@@ -1,4 +1,4 @@
-import TaxonomyList from "./taxonomyList";
+import TaxonomyList from "~/features/taxonomy/components/taxonomyList";
 
 export default function HomePage() {
 

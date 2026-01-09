@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Button from '../components/button';
-import Input from '../components/input';
-import ErrorMessage from "~/components/errorMessage";
-import SuccessMessage from "~/components/successMessage";
+import Button from '../ui/button';
+import Input from '../ui/input';
+import ErrorMessage from "~/ui/errorMessage";
+import SuccessMessage from "~/ui/successMessage";
 
 interface ForgotPasswordFormData {
     email: string;

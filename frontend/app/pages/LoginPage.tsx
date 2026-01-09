@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useAuth } from "~/auth/authContext";
+import { useSession } from "~/core/session/sessionContext";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
-import Button from "~/components/button";
-import Input from "~/components/input";
-import ErrorMessage from "~/components/errorMessage";
+import Button from "~/ui/button";
+import Input from "~/ui/input";
+import ErrorMessage from "~/ui/errorMessage";
 
 interface LoginFormData {
     email: string;
@@ -22,7 +22,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { login, isAuthenticated } = useAuth();
+    const { isAuthenticated, refreshSession } = useSession();
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -46,7 +46,9 @@ export default function LoginPage() {
                 }
             );
 
-            await login();
+            await refreshSession();
+
+            navigate("/", { replace: true });
         } catch (err: any) {
             if (err.response) {
                 const { status, data } = err.response;
@@ -93,6 +95,7 @@ export default function LoginPage() {
                     textLoading="Chargement..."
                     width="w-full"
                     disabled={loading}
+                    type="submit"
                 />
             </form>
         </div>

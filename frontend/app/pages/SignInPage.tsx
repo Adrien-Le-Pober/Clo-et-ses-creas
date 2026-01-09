@@ -1,13 +1,15 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "~/components/button";
-import Input from "~/components/input";
-import { signUpSchema } from "~/auth/signUpSchema";
-import ErrorMessage from "~/components/errorMessage";
 import { useNavigate } from "react-router";
-import { useAuth } from "./authContext";
+import { useSession } from "~/core/session/sessionContext";
+
+import Button from "~/ui/button";
+import Input from "~/ui/input";
+import { signUpSchema } from "~/features/auth/schemas";
+import ErrorMessage from "~/ui/errorMessage";
 
 interface SignUpFormData {
     email: string;
@@ -30,12 +32,14 @@ export default function SignInPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const { login } = useAuth();
+    const { refreshSession } = useSession();
     const navigate = useNavigate();
 
     const onSubmit = async (signUpForData: SignUpFormData) => {
         setLoading(true);
         setError("");
+
+        const toastId = toast.loading("Inscription en cours...");
 
         try {
             // 1Création du compte
@@ -54,14 +58,15 @@ export default function SignInPage() {
                 { withCredentials: true }
             );
 
-            // Connexion côté front (récup des infos user)
-            await login();
+            toast.success("Inscription réussie !", { id: toastId });
 
-            navigate("/");
+            await refreshSession();
+
+            navigate("/", { replace: true });
         } catch (err: any) {
             if (err.response) {
                 const { data, status } = err.response;
-                
+
                 if (status === 422 && data?.violations) {
                     const emailError = data.violations.find(
                         (violation: any) => violation.propertyPath === "email"

@@ -3,10 +3,10 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import Button from "~/components/button";
-import Input from "~/components/input";
+import Button from "~/ui/button";
+import Input from "~/ui/input";
 
-import { contactSchema } from "./schemas/contactSchema";
+import { contactSchema } from "~/features/contact/schemas";
 
 export default function ContactPage() {
     const apiURI = import.meta.env.VITE_API_URI;
