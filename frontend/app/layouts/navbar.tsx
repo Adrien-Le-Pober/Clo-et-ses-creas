@@ -5,11 +5,11 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router";
-import { useAuth } from "~/auth/authContext";
-import { useCart } from "~/order/cart/CartContext";
+import { useSession } from "~/core/session/sessionContext";
+import { useCart } from "~/features/cart/CartContext";
 
 export default function Navbar() {
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout } = useSession();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -55,15 +55,15 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-8 text-lg lg:text-2xl xl:text-4xl">
-                        <a href="/creations" className="font-medium hover:underline">
+                        <Link to="/creations" className="font-medium hover:underline">
                             Créations
-                        </a>
-                        <a href="#cadeaux" className="font-medium hover:underline">
+                        </Link>
+                        <Link to="#cadeaux" className="font-medium hover:underline">
                             Cadeaux
-                        </a>
-                        <a href="/contact" className="font-medium hover:underline">
+                        </Link>
+                        <Link to="/contact" className="font-medium hover:underline">
                             Contact
-                        </a>
+                        </Link>
                         <Link to="/mon-histoire" className="font-medium hover:underline">
                             Mon histoire
                         </Link>
@@ -108,7 +108,7 @@ export default function Navbar() {
                                     {isAuthenticated ? (
                                         <>
                                             <Link to="/mon-compte" className="block px-4 py-2">Mon compte</Link>
-                                            <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">
+                                            <button onClick={logout} type="button" className="bg-red-500 px-4 py-2 rounded">
                                                 Déconnexion
                                             </button>
                                         </>
@@ -129,6 +129,7 @@ export default function Navbar() {
                 <button
                     onClick={() => setIsMenuOpen(prev => !prev)}
                     className="text-secondary focus:outline-none"
+                    type="button"
                 >
                     <MenuIcon />
                 </button>
@@ -137,30 +138,30 @@ export default function Navbar() {
             {/* Mobile Menu */}
             {isMenuOpen && (
                 <div className="md:hidden bg-primary text-secondary">
-                    <a
-                        href="/creations"
+                    <Link
+                        to="/creations"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Créations
-                    </a>
-                    <a
-                        href="#cadeaux"
+                    </Link>
+                    <Link
+                        to="#cadeaux"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Cadeaux
-                    </a>
-                    <a
-                        href="/contact"
+                    </Link>
+                    <Link
+                        to="/contact"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Contact
-                    </a>
-                    <a
-                        href="/mon-histoire"
+                    </Link>
+                    <Link
+                        to="/mon-histoire"
                         className="block px-4 py-2 text-sm font-medium hover:bg-secondary hover:text-primary"
                     >
                         Mon histoire
-                    </a>
+                    </Link>
                 </div>
             )}
         </nav>
