@@ -1,4 +1,4 @@
-import CreationPage from "~/creations/creationPage";
+import CreationPage from "~/pages/creationPage";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

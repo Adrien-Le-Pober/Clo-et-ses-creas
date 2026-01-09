@@ -1,4 +1,4 @@
-import MyStoryPage from "~/my-story/myStoryPage";
+import MyStoryPage from "~/pages/myStoryPage";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

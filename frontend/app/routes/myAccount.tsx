@@ -1,6 +1,7 @@
 
-import MyAccountPage from "~/my-account/myAccountPage";
+import MyAccountPage from "~/pages/myAccountPage";
 import type { Route } from "./+types/home";
+import { RequireSession } from "./guards/RequireSession";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -11,6 +12,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function MyAccount() {
     return (
-        <MyAccountPage/>
+        <RequireSession>
+            <MyAccountPage />
+        </RequireSession>
     )
 }

@@ -1,4 +1,4 @@
-import ProductDetailsPage from "~/products/productDetailsPage";
+import ProductDetailsPage from "~/pages/productDetailsPage";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

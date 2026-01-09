@@ -1,4 +1,4 @@
-import ResetPasswordPage from "~/auth/ResetPasswordPage";
+import ResetPasswordPage from "~/pages/ResetPasswordPage";
 import type { Route } from "../+types/home";
 
 export function meta({}: Route.MetaArgs) {

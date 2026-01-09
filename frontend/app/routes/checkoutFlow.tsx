@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import CheckoutProgress from "~/order/checkout/checkoutProgress";
-import StepCustomerAddress from "~/order/checkout/stepCustomerAddress";
-import StepShipment from "~/order/checkout/stepShipment";
-import StepOverview from "~/order/checkout/stepOverview";
-import StepPayment from "~/order/checkout/stepPayment";
-import StepSuccess from "~/order/checkout/stepSuccess";
+import CheckoutProgress from "~/features/checkout/components/checkoutProgress";
+import StepCustomerAddress from "~/features/checkout/steps/address/stepCustomerAddress";
+import StepShipment from "~/features/checkout/steps/shipment/stepShipment";
+import StepOverview from "~/features/checkout/components/stepOverview";
+import StepPayment from "~/features/checkout/steps/payment/stepPayment";
+import StepSuccess from "~/features/checkout/steps/success/stepSuccess";
 import type { Route } from "./+types/home";
-import Button from "~/components/button";
+import Button from "~/ui/button";
 
 export function meta({}: Route.MetaArgs) {
     return [
