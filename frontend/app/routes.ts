@@ -6,7 +6,6 @@ export default [
     route("contact", "routes/contact.tsx"),
     route("mon-histoire", "routes/myStory.tsx"),
     route("inscription", "routes/signIn.tsx"),
-    route("mon-compte", "routes/myAccount.tsx"),
 
     route("produit/:slug", "routes/productDetails.tsx"),
 
@@ -23,4 +22,8 @@ export default [
     ...prefix("categories", [
         route("/categorie/:category", "routes/categories/category.tsx"),
     ]),
+
+    ...prefix("mon-compte", [
+        route("/profil", "routes/account/profile.tsx"),
+    ])
 ] satisfies RouteConfig;

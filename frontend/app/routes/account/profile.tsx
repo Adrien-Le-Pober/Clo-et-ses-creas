@@ -1,7 +1,7 @@
 
-import MyAccountPage from "~/pages/myAccountPage";
-import type { Route } from "./+types/home";
-import { RequireSession } from "./guards/RequireSession";
+import ProfilePage from "~/pages/account/profilePage";
+import type { Route } from "../+types/home";
+import { RequireSession } from "../guards/RequireSession";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -10,10 +10,10 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export default function MyAccount() {
+export default function Profile() {
     return (
         <RequireSession>
-            <MyAccountPage />
+            <ProfilePage />
         </RequireSession>
     )
 }

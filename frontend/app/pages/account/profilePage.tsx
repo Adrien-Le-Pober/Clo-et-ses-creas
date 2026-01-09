@@ -3,10 +3,10 @@ import AccountPersonalInfoForm from "~/features/customer/components/accountPerso
 import ChangePasswordForm from "~/features/my-account/components/changePasswordForm";
 import { useSession } from "~/core/session/sessionContext";
 import { useCustomer } from "~/hooks/useCustomer";
-import DeleteAccountButton from "../features/my-account/components/deleteAccountButton";
+import DeleteAccountButton from "../../features/my-account/components/deleteAccountButton";
 import ErrorMessage from "~/ui/errorMessage";
 
-export default function MyAccountPage() {
+export default function ProfilePage() {
     const { identity } = useSession();
 
     const customerId = identity?.id ? Number(identity.id) : null;
