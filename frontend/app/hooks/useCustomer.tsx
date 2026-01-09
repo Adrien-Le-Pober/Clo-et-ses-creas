@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosClient } from "~/core/api/axios";
+import type { Address } from "~/types/Address";
+import type { Customer } from "~/types/Customer";
 
 type CustomerErrorType =
     | "unauthorized"
@@ -13,8 +15,8 @@ interface CustomerError {
 }
 
 export function useCustomer(customerId: number | null) {
-    const [customer, setCustomer] = useState<any>(null);
-    const [address, setAddress] = useState<any>(null);
+    const [customer, setCustomer] = useState<Customer | null>(null);
+    const [address, setAddress] = useState<Address | null>(null);
     const [isCustomerLoading, setIsCustomerLoading] = useState(false);
     const [customerError, setCustomerError] = useState<CustomerError | null>(null);
 
