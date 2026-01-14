@@ -1,6 +1,6 @@
-import AccountPersonalInfoForm from "~/features/customer/components/accountPersonalInfoForm";
+import AccountPersonalInfoForm from "~/features/customer/components/AccountPersonalInfoForm";
 import type { StepProps } from "../../types";
-import { useSession } from "~/core/session/sessionContext";
+import { useSession } from "~/core/session/SessionContext";
 import { useCustomer } from "~/hooks/useCustomer";
 import { useCart } from "~/features/cart/CartContext";
 

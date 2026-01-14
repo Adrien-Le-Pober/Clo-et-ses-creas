@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { ShippingMethod } from "../types";
 import { fetchShippingMethods, fetchShippingMethodPrice } from "../services/shippingMethod.service";
-import Loader from "~/ui/loader";
+import Loader from "~/ui/Loader";
 import { useCart } from "~/features/cart/CartContext";
 
 interface Props {

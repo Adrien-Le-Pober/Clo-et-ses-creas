@@ -1,4 +1,4 @@
-import TaxonomyList from "~/features/taxonomy/components/taxonomyList";
+import TaxonList from "~/features/taxon/components/TaxonList";
 
 export default function HomePage() {
 
@@ -11,7 +11,7 @@ export default function HomePage() {
         </h1>
       </section>
       <section className="pb-28">
-        <TaxonomyList/>
+        <TaxonList/>
       </section>
     </>
   );

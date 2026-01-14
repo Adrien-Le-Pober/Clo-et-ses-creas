@@ -7,7 +7,7 @@ export default [
     route("mon-histoire", "routes/myStory.tsx"),
     route("inscription", "routes/signIn.tsx"),
 
-    route("produit/:slug", "routes/productDetails.tsx"),
+    route("produit/:slug", "routes/product.tsx"),
 
     route("panier", "routes/cart.tsx"),
 
@@ -19,9 +19,7 @@ export default [
         route("nouveau-mot-de-passe", "routes/connexion/resetPassword.tsx"),
     ]),
 
-    ...prefix("categories", [
-        route("/categorie/:category", "routes/categories/category.tsx"),
-    ]),
+    route("categorie/:slug", "routes/taxon/taxon.tsx"),
 
     ...prefix("mon-compte", [
         route("/profil", "routes/account/profile.tsx"),

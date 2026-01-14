@@ -1,6 +1,6 @@
 import { useCart } from "~/features/cart/CartContext";
 import { useNavigate } from "react-router";
-import Button from "~/ui/button";
+import Button from "~/ui/Button";
 
 export default function AddToCartModal() {
     const { state, dispatch } = useCart();

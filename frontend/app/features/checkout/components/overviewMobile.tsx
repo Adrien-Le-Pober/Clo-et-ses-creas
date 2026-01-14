@@ -1,7 +1,7 @@
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import Button from '~/ui/button';
+import Button from '~/ui/Button';
 
 interface CartItem {
     id: string;

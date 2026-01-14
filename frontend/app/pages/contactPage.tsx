@@ -3,8 +3,8 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import Button from "~/ui/button";
-import Input from "~/ui/input";
+import Button from "~/ui/Button";
+import Input from "~/ui/Input";
 
 import { contactSchema } from "~/features/contact/schemas";
 

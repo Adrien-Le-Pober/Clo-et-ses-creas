@@ -1,9 +1,9 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import SelectButton from '~/ui/selectButton';
+import SelectButton from '~/ui/SelectButton';
 import { useEffect, useState } from 'react';
-import ProductList from '~/features/products/components/productList';
+import ProductList from '~/features/product/components/ProductList';
 import axios from 'axios';
-import FilterChips from '~/ui/filterChips';
+import FilterChips from '~/ui/FilterChips';
 
 export default function creationPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);

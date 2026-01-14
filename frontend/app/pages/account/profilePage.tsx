@@ -1,10 +1,10 @@
-import Accordion from "~/ui/accordion";
-import AccountPersonalInfoForm from "~/features/customer/components/accountPersonalInfoForm";
-import ChangePasswordForm from "~/features/my-account/components/changePasswordForm";
-import { useSession } from "~/core/session/sessionContext";
+import Accordion from "~/ui/Accordion";
+import AccountPersonalInfoForm from "~/features/customer/components/AccountPersonalInfoForm";
+import ChangePasswordForm from "~/features/my-account/components/ChangePasswordForm";
+import { useSession } from "~/core/session/SessionContext";
 import { useCustomer } from "~/hooks/useCustomer";
-import DeleteAccountButton from "../../features/my-account/components/deleteAccountButton";
-import ErrorMessage from "~/ui/errorMessage";
+import DeleteAccountButton from "../../features/my-account/components/DeleteAccountButton";
+import ErrorMessage from "~/ui/ErrorMessage";
 
 export default function ProfilePage() {
     const { identity } = useSession();

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import CartMobile from "~/features/cart/components/cartMobile";
-import CartDesktop from "~/features/cart/components/cartDesktop";
+import CartMobile from "~/features/cart/components/CartMobile";
+import CartDesktop from "~/features/cart/components/CartDesktop";
 import { useCart } from "~/features/cart/CartContext";
 import { Link, useNavigate } from "react-router";
-import Loader from "~/ui/loader";
+import Loader from "~/ui/Loader";
 
 export default function CartPage() {
     const navigate = useNavigate();

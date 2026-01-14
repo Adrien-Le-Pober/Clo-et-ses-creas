@@ -2,8 +2,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { axiosClient } from "~/core/api/axios";
-import { useSession } from "~/core/session/sessionContext";
-import Button from "~/ui/button";
+import { useSession } from "~/core/session/SessionContext";
+import Button from "~/ui/Button";
 
 export default function DeleteAccountButton() {
     const [open, setOpen] = useState(false);

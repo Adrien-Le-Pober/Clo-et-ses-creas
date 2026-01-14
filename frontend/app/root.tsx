@@ -12,15 +12,15 @@ import { Toaster } from "react-hot-toast";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 
-import Navbar from "./layouts/navbar";
-import Footer from "./layouts/footer";
+import Navbar from "./layouts/Navbar";
+import Footer from "./layouts/Footer";
 
 import error_404 from "./../assets/images/error_404.png";
 import error_404_mobile from "./../assets/images/error_404_mobile.png";
 import { CartProvider } from "./features/cart/CartContext";
-import { SessionProvider } from "./core/session/sessionContext";
+import { SessionProvider } from "./core/session/SessionContext";
 
-import AddToCartModal from "~/features/cart/components/addToCartModal";
+import AddToCartModal from "~/features/cart/components/AddToCartModal";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", type:"image/jpg", href:"../public/favicon.jpg" },

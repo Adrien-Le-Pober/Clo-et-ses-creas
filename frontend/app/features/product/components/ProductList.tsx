@@ -1,8 +1,8 @@
-import ProductItem from "./productItem";
+import Product from "./Product";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Loader from "~/ui/loader";
-import Button from "~/ui/button";
+import Loader from "~/ui/Loader";
+import Button from "~/ui/Button";
 
 interface Product {
     id: string;
@@ -127,7 +127,7 @@ export default function ProductList({
         <div className="flex flex-col items-center w-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center mb-[72px]">
                 {filteredProductList.slice(0, visibleCount).map((product, index) => (
-                    <ProductItem key={product.id || index} {...product} />
+                    <Product key={product.id || index} {...product} />
                 ))}
             </div>
             {visibleCount < filteredProductList.length && (

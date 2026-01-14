@@ -1,7 +1,7 @@
-import { useSession } from "~/core/session/sessionContext";
+import { useSession } from "~/core/session/SessionContext";
 import { useLocation, useNavigate } from "react-router";
 import { useEffect, type ReactNode } from "react";
-import Loader from "~/ui/loader";
+import Loader from "~/ui/Loader";
 
 interface Props {
     children: ReactNode;

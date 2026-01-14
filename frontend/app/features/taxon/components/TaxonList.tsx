@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import TaxonomyItem from "./taxonomyItem";
+import Taxon from "./Taxon";
 import axios from 'axios';
-import Loader from "~/ui/loader";
+import Loader from "~/ui/Loader";
 
-interface Taxonomy {
+interface Taxon {
     id: string;
     code: string;
     name: string;
@@ -11,19 +11,19 @@ interface Taxonomy {
     images: string[];
 }
 
-export default function taxonomyList() {
-    const [taxonomyList, setTaxonomyList] = useState<Taxonomy[]>([]);
+export default function TaxonList() {
+    const [taxonList, setTaxonList] = useState<Taxon[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchTaxonomies = async () => {
+        const fetchTaxonList = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_URI}shop/taxons`);
                 const data = response.data;
 
                 // Transformation des données pour correspondre au type Taxonomy
-                const taxonomies: Taxonomy[] = data["hydra:member"].map((taxon: any) => ({
+                const taxonomies: Taxon[] = data["hydra:member"].map((taxon: any) => ({
                     id: taxon.id,
                     code: taxon.code,
                     name: taxon.name,
@@ -31,7 +31,7 @@ export default function taxonomyList() {
                     images: taxon.images?.map((img: any) => img.path) || [],
                 }));
 
-                setTaxonomyList(taxonomies);
+                setTaxonList(taxonomies);
             } catch (err) {
                 console.error(err);
                 setError('Echec du chargement des catégories');
@@ -40,7 +40,7 @@ export default function taxonomyList() {
             }
         };
 
-        fetchTaxonomies();
+        fetchTaxonList();
     }, []);
 
     if (loading) return <Loader/>;
@@ -48,8 +48,8 @@ export default function taxonomyList() {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-8">
-            {taxonomyList.map((taxonomy) => (
-                <TaxonomyItem key={taxonomy.id} {...taxonomy} />
+            {taxonList.map((taxon) => (
+                <Taxon key={taxon.id} {...taxon} />
             ))}
         </div>
     )

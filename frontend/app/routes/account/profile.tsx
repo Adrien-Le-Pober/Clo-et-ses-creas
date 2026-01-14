@@ -1,5 +1,5 @@
 
-import ProfilePage from "~/pages/account/profilePage";
+import ProfilePage from "~/pages/account/ProfilePage";
 import type { Route } from "../+types/home";
 import { RequireSession } from "../guards/RequireSession";
 

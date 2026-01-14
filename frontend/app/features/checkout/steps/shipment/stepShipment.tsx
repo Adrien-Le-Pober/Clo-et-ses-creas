@@ -3,14 +3,14 @@ import { useCart } from "../../../cart/CartContext";
 
 import type { StepProps } from "../../types";
 import type { RelayPoint } from "./types";
-import type { CityQuery } from "~/features/address/types";
+import type { CityQuery } from "~/ui/city/types";
 
-import Button from "~/ui/button";
-import Loader from "~/ui/loader";
-import CityAutoComplete from "~/features/address/components/cityAutoComplete";
+import Button from "~/ui/Button";
+import Loader from "~/ui/Loader";
+import CityAutoComplete from "~/ui/city/CityAutoComplete";
 
-import RelayPointList from "./components/relayPointList";
-import MondialRelayMap from "./components/mondialRelayMap";
+import RelayPointList from "./components/RelayPointList";
+import MondialRelayMap from "./components/MondialRelayMap";
 import ShippingMethodList from "./components/ShippingMethodList";
 
 import { fetchRelayPoints } from "./services/relayPoint.service";

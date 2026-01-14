@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 
-import Input from "~/ui/input";
-import Button from "~/ui/button";
-import SelectInput from "../../../ui/selectInput";
-import Loader from "~/ui/loader";
+import Input from "~/ui/Input";
+import Button from "~/ui/Button";
+import SelectInput from "../../../ui/SelectInput";
+import Loader from "~/ui/Loader";
 import { axiosClient } from "~/core/api/axios";
 import { useEffect, useState } from "react";
 

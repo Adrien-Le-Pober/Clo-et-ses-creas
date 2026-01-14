@@ -2,12 +2,12 @@ import type { StepProps } from "../../types";
 
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { StripePaymentForm } from "./stripePaymentForm";
+import { StripePaymentForm } from "./StripePaymentForm";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "../../../cart/CartContext";
-import SelectButton from "~/ui/selectButton";
-import Loader from "~/ui/loader";
+import SelectButton from "~/ui/SelectButton";
+import Loader from "~/ui/Loader";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 

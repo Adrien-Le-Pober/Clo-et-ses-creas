@@ -3,8 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { axiosClient } from "~/core/api/axios";
 
-import Input from "~/ui/input";
-import Button from "~/ui/button";
+import Input from "~/ui/Input";
+import Button from "~/ui/Button";
 import { changePasswordSchema } from "../schemas";
 
 interface ChangePasswordFormProps {

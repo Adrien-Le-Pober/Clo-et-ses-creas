@@ -1,11 +1,12 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Loader from "~/ui/loader";
-import DesktopCarousel from "~/features/products/components/productDetailsDesktopCarousel";
-import MobileCarousel from "~/features/products/components/productDetailsMobileCarousel";
-import ProductItem from "~/features/products/components/productItem";
+import Loader from "~/ui/Loader";
+import DesktopCarousel from "~/features/product/components/ProductCarouselDesktop";
+import MobileCarousel from "~/features/product/components/ProductCarouselMobile";
+import Product from "~/features/product/components/Product";
 import { useCart } from "~/features/cart/CartContext";
+import type { ProductDTO } from '~/features/product/types';
 
 interface ProductDetails {
     code: string;
@@ -21,19 +22,7 @@ interface ProductImage {
     type?:string;
 }
 
-interface Product {
-    id: string;
-    code: string;
-    name: string;
-    description: string;
-    images: string[];
-    price: number;
-    taxon: string;
-    slug: string;
-}
-
-
-export default function ProductDetailsPage() {
+export default function ProductPage() {
     const apiURI = `${import.meta.env.VITE_API_URI}`;
     const { slug } = useParams();
     const [error, setError] = useState("");
@@ -43,7 +32,7 @@ export default function ProductDetailsPage() {
 
     const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
     const { addItem } = useCart();
-    const [associatedProducts, setAssociatedProducts] = useState<Product[] | null>(null);
+    const [associatedProducts, setAssociatedProducts] = useState<ProductDTO[] | null>(null);
 
     const DESCRIPTION_LIMIT = 170;
 
@@ -123,7 +112,7 @@ export default function ProductDetailsPage() {
         // Limiter à 3 produits
         associatedProductsUris = associatedProductsUris.slice(0, 3);
     
-        let associatedProducts: Product[] = [];
+        let associatedProducts: ProductDTO[] = [];
         for (let productUri of associatedProductsUris) {
             const cleanedUri = productUri.replace(/^\/?api\/v2\//, "");
             let product = await axios.get(`${apiURI}${cleanedUri}`);
@@ -205,7 +194,7 @@ export default function ProductDetailsPage() {
                     <div className="flex flex-col items-center lg:justify-center lg:flex-row">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {associatedProducts.map((product) => (
-                                <ProductItem key={product.id} {...product} />
+                                <Product key={product.id} {...product} />
                             ))}
                         </div>
                     </div>

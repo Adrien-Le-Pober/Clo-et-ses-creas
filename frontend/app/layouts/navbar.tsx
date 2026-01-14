@@ -5,7 +5,7 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router";
-import { useSession } from "~/core/session/sessionContext";
+import { useSession } from "~/core/session/SessionContext";
 import { useCart } from "~/features/cart/CartContext";
 
 export default function Navbar() {

@@ -1,5 +1,5 @@
 import type { UseFormRegisterReturn } from "react-hook-form";
-import ErrorMessage from "./errorMessage";
+import ErrorMessage from "./ErrorMessage";
 
 interface InputProps {
     label: string;

@@ -1,4 +1,4 @@
-import ErrorMessage from "~/ui/errorMessage";
+import ErrorMessage from "~/ui/ErrorMessage";
 
 export default function SelectInput({
     label,

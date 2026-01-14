@@ -1,4 +1,4 @@
-import CartPage from "~/pages/cartPage";
+import CartPage from "~/pages/CartPage";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

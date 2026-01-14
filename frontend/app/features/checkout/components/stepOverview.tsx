@@ -1,9 +1,9 @@
 import type { StepProps } from "../types";
 import { useCart } from "../../cart/CartContext";
 import { useEffect, useState } from "react";
-import Loader from "~/ui/loader";
-import OverviewMobile from "./overviewMobile";
-import OverviewDesktop from "./overviewDesktop";
+import Loader from "~/ui/Loader";
+import OverviewMobile from "./OverviewMobile";
+import OverviewDesktop from "./OverviewDesktop";
 import { Link } from "react-router";
 
 export default function StepOverview({ onNext }: StepProps) {

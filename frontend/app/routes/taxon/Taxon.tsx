@@ -1,5 +1,5 @@
 import type { Route } from "../+types/home";
-import CategoryItemPage from "~/pages/categoryItemPage";
+import TaxonPage from "~/pages/TaxonPage";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -8,8 +8,8 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export default function Category() {
+export default function Taxon() {
     return (
-        <CategoryItemPage />
+        <TaxonPage />
     )
 }

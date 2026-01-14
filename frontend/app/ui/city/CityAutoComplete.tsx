@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { CityQuery } from "~/features/address/types";
+import type { CityQuery } from "~/ui/city/types";
 
 interface Props {
     onSelect: (cityQuery: CityQuery) => void;

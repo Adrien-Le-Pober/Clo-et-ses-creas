@@ -12,12 +12,12 @@ interface ProductImage {
     type?: string;
 }
 
-interface MobileCarouselProps {
+interface CarouselMobileProps {
     images: ProductImage[];
     code: string;
 }
 
-export default function MobileCarousel({ images, code }: MobileCarouselProps) {
+export default function ProductCarouselMobile({ images, code }: CarouselMobileProps) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     if (!images.length) return <p>Aucune image disponible</p>;

@@ -1,8 +1,8 @@
-import Button from "~/ui/button";
+import Button from "~/ui/Button";
 import { useNavigate } from "react-router";
 import { useCart } from "~/features/cart/CartContext";
 
-interface ProductItemProps {
+interface ProductProps {
     id: string;
     code: string;
     name: string;
@@ -11,7 +11,7 @@ interface ProductItemProps {
     slug: string;
 }
 
-export default function ProductItem({ code, name, images, price, slug }: ProductItemProps) {
+export default function Product({ code, name, images, price, slug }: ProductProps) {
     const formattedPrice = new Intl.NumberFormat("fr-FR", {
         style: "currency",
         currency: "EUR",

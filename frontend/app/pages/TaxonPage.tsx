@@ -2,11 +2,11 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import ProductList from "~/features/products/components/productList";
-import Loader from "~/ui/loader";
+import ProductList from "~/features/product/components/ProductList";
+import Loader from "~/ui/Loader";
 
-export default function CategoryItemPage() {
-    const { category } = useParams<{ category: string }>();
+export default function TaxonPage() {
+    const { slug } = useParams<{ slug: string }>();
     const [taxonCode, setTaxonCode] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export default function CategoryItemPage() {
                 const taxons = response.data["hydra:member"];
 
                 // Étape 2 : Filtrer pour trouver le taxon correspondant au slug
-                const matchingTaxon = taxons.find((taxon: any) => taxon.slug === `categorie/${category}`);
+                const matchingTaxon = taxons.find((taxon: any) => taxon.slug === `categorie/${slug}`);
 
                 if (matchingTaxon) {
                     setTaxonCode(matchingTaxon.code);
@@ -36,7 +36,7 @@ export default function CategoryItemPage() {
             }
         };
         fetchTaxonCode();
-    }, [category]);
+    }, [slug]);
 
     if (loading) return (
         <div className="py-24">
@@ -49,7 +49,7 @@ export default function CategoryItemPage() {
 
     return (
         <>
-            <h1 className="text-center text-3xl lg:text-4xl capitalize py-8 lg:py-24">{category}</h1>
+            <h1 className="text-center text-3xl lg:text-4xl capitalize py-8 lg:py-24">{slug}</h1>
             <section className="flex justify-center pb-24">
                 <ProductList endpoint={productEndpoint} />
             </section>

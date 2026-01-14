@@ -7,7 +7,7 @@ import {
 } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { useState } from 'react';
-import Button from '~/ui/button';
+import Button from '~/ui/Button';
 import { useCart } from '~/features/cart/CartContext';
 
 type Props = {

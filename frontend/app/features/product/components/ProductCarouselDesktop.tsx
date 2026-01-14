@@ -8,7 +8,7 @@ import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper as SwiperType } from "swiper";
-import Button from "~/ui/button";
+import Button from "~/ui/Button";
 import { useCart } from "~/features/cart/CartContext";
 
 interface ProductImage {
@@ -17,12 +17,12 @@ interface ProductImage {
     type?:string;
 }
 
-interface DesktopCarouselProps {
+interface CarouselDesktopProps {
     images: ProductImage[];
     code: string;
 }
 
-export default function DesktopCarousel({ images, code }: DesktopCarouselProps) {
+export default function ProductCarouselDesktop({ images, code }: CarouselDesktopProps) {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
     const prevRef = useRef(null);
     const nextRef = useRef(null);
