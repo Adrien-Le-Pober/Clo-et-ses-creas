@@ -1,286 +1,122 @@
-import { createContext, useReducer, useContext, useEffect } from "react";
-import axios from "axios";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    type PropsWithChildren,
+} from "react";
 
-interface CartItem {
-    id: string;
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-    subtotal: number;
-}
+import type { Order } from "./types";
+import {
+    createOrder,
+    fetchOrder,
+    addItemToOrder,
+    removeItemFromOrder,
+    updateOrderItemQuantity,
+} from "./api";
 
-interface CartState {
-    cartToken: string | null;
-    items: CartItem[];
+interface CartContextValue {
+    order: Order | null;
     loading: boolean;
-    error: string | null;
-    lastAddedItem: CartItem | null;
+    addItem: (variant: string, quantity?: number) => Promise<void>;
+    removeItem: (itemId: number) => Promise<void>;
+    updateItemQuantity: (itemId: number, quantity: number) => Promise<void>;
+    refresh: () => Promise<void>;
 }
 
-type CartAction =
-    | { type: "SET_CART_TOKEN"; payload: string }
-    | { type: "SET_ITEMS"; payload: CartItem[] }
-    | { type: "ADD_ITEM"; payload: CartItem }
-    | { type: "SET_LAST_ADDED_ITEM"; payload: CartItem | null }
-    | { type: "REMOVE_ITEM"; payload: string }
-    | { type: "UPDATE_ITEM"; payload: { id: string; quantity: number, subtotal: number } }
-    | { type: "RESET_CART"; }
-    | { type: "SET_LOADING"; payload: boolean }
-    | { type: "SET_ERROR"; payload: string | null };
+const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-const CartContext = createContext<{
-    state: CartState;
-    dispatch: React.Dispatch<CartAction>;
-    getCart: () => Promise<any | null>;
-    addItem: (productVariantCode: string, quantity?: number) => Promise<void>;
-    removeItem: (itemCode: string) => Promise<void>;
-    updateItemQuantity: (itemCode: string, quantity: number) => Promise<void>;
-    updateCart: (updateData: Partial<{email: string, billingAddress: object, shippingAddress: object, couponCode: string, customer?: string}>) => Promise<void>;
-    resetCart: () => Promise<any | null>;
-} | undefined>(undefined);
+const CART_TOKEN_KEY = "cart_token";
 
-const apiURI = import.meta.env.VITE_API_URI;
-
-const initialState: CartState = {
-    cartToken: null,
-    items: [],
-    loading: false,
-    error: null,
-    lastAddedItem: null,
-};
-
-function cartReducer(state: CartState, action: CartAction): CartState {
-    switch (action.type) {
-        case "SET_CART_TOKEN":
-            if (typeof window !== "undefined") {
-                localStorage.setItem("cartToken", action.payload);
-            }
-            return { ...state, cartToken: action.payload };
-
-        case "SET_ITEMS":
-            return { ...state, items: action.payload };
-
-        case "ADD_ITEM":
-            return { ...state, items: [...state.items, action.payload] };
-
-        case "SET_LAST_ADDED_ITEM":
-            return { ...state, lastAddedItem: action.payload };
-
-        case "REMOVE_ITEM":
-            return { ...state, items: state.items.filter((item) => item.id !== action.payload) };
-
-        case "UPDATE_ITEM":
-            return {
-                ...state,
-                items: state.items.map((item) =>
-                    item.id === action.payload.id 
-                        ? { ...item, quantity: action.payload.quantity, subtotal: action.payload.subtotal }
-                        : item
-                ),
-            };
-
-        case "RESET_CART":
-            if (typeof window !== "undefined") {
-                localStorage.removeItem("cartToken");
-            }
-            return { ...initialState, cartToken: null, items: [], loading: false, error: null };
-
-        case "SET_LOADING":
-            return { ...state, loading: action.payload };
-
-        case "SET_ERROR":
-            return { ...state, error: action.payload };
-
-        default:
-            return state;
-    }
-}
-
-export function CartProvider({ children }: { children: React.ReactNode }) {
-    const [state, dispatch] = useReducer(cartReducer, initialState);
+export function CartProvider({ children }: PropsWithChildren) {
+    const [order, setOrder] = useState<Order | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchCart = async () => {
-            dispatch({ type: "SET_LOADING", payload: true });
-
-            let cartToken = localStorage.getItem("cartToken");
-
-            if (cartToken && !state.cartToken) {
-                dispatch({ type: "SET_CART_TOKEN", payload: cartToken });
-            }
-
-            if (!cartToken) {
-                try {
-                    const { data } = await axios.post(`${apiURI}shop/orders`, {}, {
-                        headers: { "Content-Type": "application/ld+json" },
-                    });
-                    cartToken = data.tokenValue;
-                    if (cartToken) {
-                        dispatch({ type: "SET_CART_TOKEN", payload: cartToken });
-                    }
-                } catch (error) {
-                    dispatch({ type: "SET_ERROR", payload: "Impossible de créer un panier." });
-                    return;
-                }
-            }
-
-            try {
-                const { data } = await axios.get(`${apiURI}shop/orders/${cartToken}`);
-                dispatch({ type: "SET_ITEMS", payload: data.items || [] });
-            } catch (error) {
-                dispatch({ type: "SET_ERROR", payload: "Impossible de charger le panier." });
-            } finally {
-                dispatch({ type: "SET_LOADING", payload: false });
-            }
-        };
-
-        fetchCart();
+        bootstrapCart();
     }, []);
 
-    const getCart = async () => {
-        if (!state.cartToken) return null;
-        try {
-            const { data } = await axios.get(`${apiURI}shop/orders/${state.cartToken}`);
-            return data;
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Impossible de récupérer le panier." });
-            return null;
-        }
-    };
+    async function bootstrapCart() {
+        setLoading(true);
+        const token = localStorage.getItem(CART_TOKEN_KEY);
 
-    const addItem = async (productVariantCode: string, quantity: number = 1) => {
         try {
-            let cartToken = state.cartToken;
-            if (!cartToken) return;
-    
-            const { data } = await axios.post(`${apiURI}shop/orders/${cartToken}/items`, { 
-                productVariant: productVariantCode, 
-                quantity 
-            });
-    
-            dispatch({ type: "SET_ITEMS", payload: data.items || [] });
-
-            const added = data.items[data.items.length - 1];
-            dispatch({ type: "SET_LAST_ADDED_ITEM", payload: added });
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.description || "";
-            
-            if (error.response?.status === 500 && errorMessage.includes("Cart with given token has not been found")) {
-                try {
-                    const { data } = await axios.post(`${apiURI}shop/orders`, {}, {
-                        headers: { "Content-Type": "application/ld+json" },
-                    });
-    
-                    const newCartToken = data.tokenValue;
-    
-                    if (newCartToken) {
-                        dispatch({ type: "SET_CART_TOKEN", payload: newCartToken });
-    
-                        const { data: newData } = await axios.post(`${apiURI}shop/orders/${newCartToken}/items`, { 
-                            productVariant: productVariantCode, 
-                            quantity 
-                        });
-    
-                        dispatch({ type: "SET_ITEMS", payload: newData.items || [] });
-                    }
-                } catch (createError) {
-                    dispatch({ type: "SET_ERROR", payload: "Impossible de recréer le panier." });
-                }
-            } else {
-                dispatch({ type: "SET_ERROR", payload: "Erreur lors de l'ajout au panier." });
+            if (token) {
+                const existingOrder = await fetchOrder(token);
+                setOrder(existingOrder);
+                return;
             }
-        }
-    };
-    
-
-    const removeItem = async (itemId: string) => {
-        try {
-            if (!state.cartToken) return;
-
-            await axios.delete(`${apiURI}shop/orders/${state.cartToken}/items/${itemId}`);
-
-            dispatch({ type: "REMOVE_ITEM", payload: itemId });
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Erreur lors de la suppression." });
-        }
-    };
-
-    const updateItemQuantity = async (itemId: string, quantity: number) => {
-        try {
-            if (!state.cartToken) return;
-
-            const { data } = await axios.patch(`${apiURI}shop/orders/${state.cartToken}/items/${itemId}`,
-                { quantity },
-                { headers: { "Content-Type": "application/merge-patch+json" } }
-            );
-            
-            const updatedItem = data.items.find((item: CartItem) => item.id === itemId);
-            if (!updatedItem) return;
-
-            dispatch({ type: "UPDATE_ITEM", payload: { id: itemId, quantity, subtotal: updatedItem.subtotal } });
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Erreur lors de la mise à jour." });
-        }
-    };
-
-    const updateCart = async (updateData: Partial<{ 
-        email: string,
-        billingAddress: object,
-        shippingAddress: object,
-        couponCode: string,
-        customer: string,
-    }>) => {
-        try {
-            if (!state.cartToken) return;
-    
-            const { data } = await axios.get(`${apiURI}shop/orders/${state.cartToken}`);
-    
-            const updatedOrder = {
-                email: updateData.email || data.email,
-                billingAddress: updateData.billingAddress || data.billingAddress,
-                shippingAddress: updateData.shippingAddress || data.shippingAddress,
-                couponCode: updateData.couponCode || data.couponCode,
-                customer: updateData.customer || data.customer
-            };
-    
-            await axios.put(`${apiURI}shop/orders/${state.cartToken}`, updatedOrder, {
-                headers: { "Content-Type": "application/ld+json" },
-            });
-    
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Erreur lors de la mise à jour du panier." });
-        }
-    };
-
-    const resetCart = async () => {
-        try {
-            dispatch({ type: "SET_LOADING", payload: true });
-                const { data } = await axios.post(`${apiURI}shop/orders`, {}, {
-                headers: { "Content-Type": "application/ld+json" },
-            });
-            const newCartToken = data.tokenValue;
-            dispatch({ type: "RESET_CART" });
-            dispatch({ type: "SET_CART_TOKEN", payload: newCartToken });
-        } catch (error) {
-            dispatch({ type: "SET_ERROR", payload: "Impossible de créer un nouveau panier." });
+        } catch {
+            localStorage.removeItem(CART_TOKEN_KEY);
         } finally {
-            dispatch({ type: "SET_LOADING", payload: false });
+            setLoading(false);
         }
-    };
-    
+
+        const newOrder = await createOrder();
+        localStorage.setItem(CART_TOKEN_KEY, newOrder.tokenValue);
+        setOrder(newOrder);
+    }
+
+    async function refresh() {
+        if (!order) return;
+        setOrder(await fetchOrder(order.tokenValue));
+    }
+
+    async function addItem(variant: string, quantity = 1) {
+        if (!order) return;
+        setLoading(true);
+        const updated = await addItemToOrder(
+            order.tokenValue,
+            variant,
+            quantity
+        );
+        setOrder(updated);
+        setLoading(false);
+    }
+
+    async function removeItem(itemId: number) {
+        if (!order) return;
+        setLoading(true);
+        const updated = await removeItemFromOrder(
+            order.tokenValue,
+            itemId
+        );
+        setOrder(updated);
+        setLoading(false);
+    }
+
+    async function updateItemQuantity(itemId: number, quantity: number) {
+        if (!order) return;
+        setLoading(true);
+        const updated = await updateOrderItemQuantity(
+            order.tokenValue,
+            itemId,
+            quantity
+        );
+        setOrder(updated);
+        setLoading(false);
+    }
 
     return (
-        <CartContext.Provider value={{ state, dispatch, getCart, addItem, removeItem, updateItemQuantity, updateCart, resetCart }}>
+        <CartContext.Provider
+            value={{
+                order,
+                loading,
+                addItem,
+                removeItem,
+                updateItemQuantity,
+                refresh,
+            }}
+        >
             {children}
         </CartContext.Provider>
     );
 }
 
-
 export function useCart() {
-    const context = useContext(CartContext);
-    if (!context) {
-        throw new Error("useCart doit être utilisé dans un CartProvider");
+    const ctx = useContext(CartContext);
+    if (!ctx) {
+        throw new Error("useCart must be used within CartProvider");
     }
-    return context;
+    return ctx;
 }
